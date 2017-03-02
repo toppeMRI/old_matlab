@@ -9,8 +9,11 @@ This folder contains the MATLAB script **'main.m'** which generates the file **'
 + scanloop.txt
   + Lists the order in which to play out the modules, as well as all other dynamic sequence information.
 + tipdown.mod (a .mod file with this name *must* exist on the scanner)
+  + RF excitation module that excites a 2cm slab.
 + readout.mod (a .mod file with this name *must* exist on the scanner)
+  + 3D Cartesian (spin-warp) readout module.
 + spoiler.mod
+  + A z gradient trapezoid.
 
 In MATLAB, simply do:
 
