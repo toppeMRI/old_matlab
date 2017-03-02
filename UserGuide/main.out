@@ -1,12 +1,12 @@
 \BOOKMARK [0][]{chapter.1}{1 Overview}{}% 1
 \BOOKMARK [1][]{section.1.1}{1.1 Introduction}{chapter.1}% 2
 \BOOKMARK [1][]{section.1.2}{1.2 Required external files}{chapter.1}% 3
-\BOOKMARK [2][]{subsection.1.2.1}{1.2.1 \040.wav files}{section.1.2}% 4
-\BOOKMARK [2][]{subsection.1.2.2}{1.2.2 cores.txt}{section.1.2}% 5
+\BOOKMARK [2][]{subsection.1.2.1}{1.2.1 \040.mod files}{section.1.2}% 4
+\BOOKMARK [2][]{subsection.1.2.2}{1.2.2 modules.txt}{section.1.2}% 5
 \BOOKMARK [2][]{subsection.1.2.3}{1.2.3 scanloop.txt}{section.1.2}% 6
 \BOOKMARK [0][]{chapter.2}{2 Using the toppe sequence}{}% 7
-\BOOKMARK [1][]{section.2.1}{2.1 Creating .wav files}{chapter.2}% 8
-\BOOKMARK [1][]{section.2.2}{2.2 Creating cores.txt}{chapter.2}% 9
+\BOOKMARK [1][]{section.2.1}{2.1 Creating .mod files}{chapter.2}% 8
+\BOOKMARK [1][]{section.2.2}{2.2 Creating modules.txt}{chapter.2}% 9
 \BOOKMARK [1][]{section.2.3}{2.3 Creating scanloop.txt}{chapter.2}% 10
 \BOOKMARK [1][]{section.2.4}{2.4 Testing your files with scansim.m }{chapter.2}% 11
 \BOOKMARK [1][]{section.2.5}{2.5 Compiling the toppe pulse sequence}{chapter.2}% 12
@@ -17,7 +17,7 @@
 \BOOKMARK [0][]{chapter.3}{3 Controlling sequence timing}{}% 17
 \BOOKMARK [0][]{chapter.4}{4 Using toppe.e as an interpreter module for Pulseq files}{}% 18
 \BOOKMARK [1][]{section.4.1}{4.1 Pulseq}{chapter.4}% 19
-\BOOKMARK [1][]{section.4.2}{4.2 Using toppe.e to play .seq files}{chapter.4}% 20
+\BOOKMARK [1][]{section.4.2}{4.2 Using toppev1.e to play .seq files}{chapter.4}% 20
 \BOOKMARK [0][]{section*.8}{Appendices}{}% 21
 \BOOKMARK [0][]{Appendix.a.A}{A Tools for RF and gradient waveform design}{}% 22
 \BOOKMARK [1][]{section.a.A.1}{A.1 Matlab scripts included in this distribution}{Appendix.a.A}% 23

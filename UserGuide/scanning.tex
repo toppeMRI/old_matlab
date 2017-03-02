@@ -1,24 +1,24 @@
 
 \chapter{Using the toppe sequence}
 
-\section{Creating .wav files}
-The {\tt matlab} folder in the toppe distribution (tar file) includes the Matlab script {\tt \bf mat2wav.m} that writes rho, theta, gx, gy, and gz waveforms for a core/module to a .wav file.
+\section{Creating .mod files}
+The {\tt matlab} folder in the toppe distribution (tar file) includes the Matlab script {\tt \bf mat2wav.m} that writes rho, theta, gx, gy, and gz waveforms for a core/module to a .mod file.
 Important notes and caveats:
 \begin{itemize}
 \item All waveforms in a core must have the same length, i.e., they must be padded with zeroes as needed.
-\item Even if the core is not an RF excitation core, you must create a non-zero 'dummy' RF pulse to ensure that the .wav file will be loaded correctly on the scanner (hopefully this bug will be fixed in future releases). A simple hard RF pulse of low amplitude (e.g., 0.01 Gauss) seems to work well in most cases.
-\item If the core is a readout core, data will be acquired every 4us for the entire duration of the waveforms in the .wav file. Depending on your readout trajectory, you may therefore need to discard some of the data (near the beginning and/or end of the core) before reconstructing.
-\item If more than one readout .wav file is used, they must all be the same length (readout windows of different widths are not permitted).
+\item Even if the core is not an RF excitation core, you must create a non-zero 'dummy' RF pulse to ensure that the .mod file will be loaded correctly on the scanner (hopefully this bug will be fixed in future releases). A simple hard RF pulse of low amplitude (e.g., 0.01 Gauss) seems to work well in most cases.
+\item If the core is a readout core, data will be acquired every 4us for the entire duration of the waveforms in the .mod file. Depending on your readout trajectory, you may therefore need to discard some of the data (near the beginning and/or end of the core) before reconstructing.
+\item If more than one readout .mod file is used, they must all be the same length (readout windows of different widths are not permitted).
 \item For backward compatibility, the following must be done (this may change in future releases):
 \begin{itemize}
-	\item One of the readout .wav files must be named {\tt \bf readout.wav} 
-	\item One of the RF excitation .wav files must be listed in a file {\tt \bf rffiles.txt} in /usr/g/bin/ 
+	\item One of the readout .mod files must be named {\tt \bf readout.mod} 
+	\item One of the RF excitation .mod files must be named {\tt \bf tipdown.mod} 
 \end{itemize}
 \end{itemize}
 
 
-\section{Creating cores.txt}
-{\tt cores.txt} can simply be created by hand, as specified above.
+\section{Creating modules.txt}
+{\tt modules.txt} can simply be created by hand, as specified above.
 
 
 \section{Creating scanloop.txt}
@@ -41,7 +41,7 @@ As an example, do the following in the \texttt{example} directory:
   >> d = readloop('scanloop.txt');
   >> startseqStart = 10000;
   >> startseqEnd = startseqStart+19; % display 20 consecutive startseq() calls
-  % Load the .wav files listed in cores.txt and display part of sequence.
+  % Load the .mod files listed in modules.txt and display part of sequence.
   % Exact timing information is loaded from 'timing.txt':
   >> scansim(startseqStart,startseqEnd,d);  
 \end{lstlisting}
@@ -49,7 +49,7 @@ As an example, do the following in the \texttt{example} directory:
 \myfigure{scansim}{1.0}{
 Example sequence display created with \texttt{scansim.m}.
 The sequence shown is a Bloch-Siegert B1 transmit mapping sequence with a 3D Cartesian readout.
-Like the \texttt{toppe} and \texttt{toppe.psd.o} executables on the scanner, \texttt{scansim.m} loads \texttt{cores.txt} and the .wav files listed therein, and \texttt{scanloop.txt}.
+Like the \texttt{toppe} and \texttt{toppe.psd.o} executables on the scanner, \texttt{scansim.m} loads \texttt{modules.txt} and the .mod files listed therein, and \texttt{scanloop.txt}.
 In addition, \texttt{scansim.m} obtains exact sequence timing information from the file \texttt{timing.txt}.
 }
 
@@ -86,7 +86,8 @@ This will create two executables: {\tt \psdname} and {\tt \psdname.psd.o}.
 
 \section{Legacy files that must exist in \texttt{/usr/g/bin/} on scanner}
 
-The README  file in the \texttt{legacy} directory lists the files that must exist in \texttt{/usr/g/bin/} on the scanner for the toppe executables to run.
+The files {\tt legacy1.rho}, {\tt legacy1.theta}, and {\tt legacy2.rho} must be copied to /usr/g/bin/ on the scanner.
+These files are included in the subfolders of {\tt matlab/seqlib/} in the TOPPE MATLAB repository, available at \url{https://github.com/toppeMRI/toppe/}.
 
 
 
@@ -95,11 +96,11 @@ The README  file in the \texttt{legacy} directory lists the files that must exis
 Follow these steps to prescribe and run the toppe sequence:
 \begin{enumerate}
 	\item Copy {\tt \psdname} and {\tt \psdname.psd.o} to /usr/g/bin/ on the scanner host computer (console).
-	\item Copy {\tt cores.txt}, {\tt scanloop.txt}, and all .wav files to /usr/g/bin/.
-	\item Make sure the required \textbf{legacy files} exist:
+	\item Copy {\tt modules.txt}, {\tt scanloop.txt}, and all .mod files to /usr/g/bin/.
+	\item Make sure the following required files exist:
 	\begin{itemize}
-		\item Make sure one of the readout (acquisition) .wav files is named {\tt readout.wav}.
-		\item Create a file {\tt rffiles.txt} in /usr/g/bin/, containing the name of one of the RF .wav files.
+		\item Make sure one of the readout (acquisition) .mod files is named {\tt readout.mod}.
+		\item Create a file {\tt rffiles.txt} in /usr/g/bin/, containing the name of one of the RF .mod files.
 		\item Copy \texttt{sech\_7360.rho}, \texttt{sech\_7360.theta}, and \texttt{myhanning.rho} from the \texttt{legacy} directory in this distribution to \texttt{/usr/g/bin/} on the scanner.
 	\end{itemize}
 	\item Run a localizer sequence, including auto-prescan.
@@ -117,7 +118,7 @@ Follow these steps to prescribe and run the toppe sequence:
 	\item If autoprescan fails, do a 'dummy' manual prescan: Enter into manual prescan (Fig.~\ref{fig:Rx3}), adjust receive gains if needed, and exit (this will avoid auto-prescan when clicking the 'scan' button).
 	\item Click scan button. This will create a Pfile in /usr/g/mrraw/.
 	\item If you see evidence of overranging in the reconstructed image you will need to reduce the receive gains (in manual prescan) and scan again.
-	\item To run a different scan with the same number of slices, simply overwrite cores.txt and scanloop.txt and make sure the .wav files for the next sequence exist in /usr/g/bin/. Then download the sequence (right-click) and hit Scan button. You do not need to prescribe a new sequence every time you load a new set of external files.
+	\item To run a different scan with the same number of slices, simply overwrite modules.txt and scanloop.txt and make sure the .mod files for the next sequence exist in /usr/g/bin/. Then download the sequence (right-click) and hit Scan button. You do not need to prescribe a new sequence every time you load a new set of external files.
 \end{enumerate}
 
 \mywrapfigure{Rx1}{R}{0.98}{

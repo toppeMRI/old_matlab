@@ -13,7 +13,7 @@ With\toppe, the task of pulse programming a GE scanner becomes one of creating t
 
 \toppe~was developed as a research tool at the fMRI laboratory at University of Michigan, and has to date been used in several projects including stack-of-spirals imaging, Bloch-Siegert B1+ mapping, echo-shifted RF-spoiled imaging (PRESTO), steady-state imaging with 3D tailored RF excitation, and dual-echo steady-state (DESS) imaging.
 
-We are currently making\toppe~compatible with {\bf Pulseq}, an open file format for compactly describing MR sequences.
+We are currently making \toppe~compatible with {\bf Pulseq}, an open file format for compactly describing MR sequences.
 See Chapter~\ref{ch:pulseq} for more information about using\toppe~as a GE ``interpreter module'' for Pulseq files.
 
 This is the first 'beta' release of\toppe, and \textbf{your feedback} is most welcome. 
@@ -23,27 +23,27 @@ This is the first 'beta' release of\toppe, and \textbf{your feedback} is most we
 \section{Required external files}
 In addition to the {\tt toppe} and {\tt toppe.psd.o} executables, which only need to be compiled and installed once for each scanner software upgrade, the following files are needed to run a particular scan:
 
-\subsection{ {\tt $\star$.wav} files}
-\toppe~creates several unique ``cores'' (or modules), with each core/module associated with one .wav file (Fig.~\ref{fig:overview}).
-For example, an RF excitation module may be defined by a file called {\tt tipdown.wav} that specifies the RF amplitude and phase waveforms (rho and theta) and all three gradients.
-Similarly, a Cartesian (spin-warp) gradient-echo readout may be defined in a file {\tt readout.wav} that contains readout and phase-encode gradient waveforms.
-Finally, a spoiler gradient can be defined in a file {\tt spoiler.wav}.
-Each .wav file is unique up to a scaling factor, and typically only a few .wav files are needed.
-Note that each .wav file gives rise to a separate {\tt createseq()} call in \toppe.
+\subsection{ {\tt $\star$.mod} files}
+\toppe~creates several unique ``cores'' (or modules), with each core/module associated with one .modfile (Fig.~\ref{fig:overview}).
+For example, an RF excitation module may be defined by a file called {\tt tipdown.mod} that specifies the RF amplitude and phase waveforms (rho and theta) and all three gradients.
+Similarly, a Cartesian (spin-warp) gradient-echo readout may be defined in a file {\tt readout.mod} that contains readout and phase-encode gradient waveforms.
+Finally, a spoiler gradient can be defined in a file {\tt spoiler.mod}.
+Each .mod file is unique up to waveform scale factors and to a rotation in the logical xy-plane, and typically only a few .mod files are needed.
+Note that each .mod file gives rise to a separate {\tt createseq()} call in \toppe.
 
-\subsection{\tt cores.txt}
-The various $\star$.wav files needed to define a scan are listed in a small text file named {\tt cores.txt}, which simply contains a line for each .wav file specifying the file name, core duration, and whether it is an RF excitation module, readout module, or gradients-only module.
+\subsection{\tt modules.txt}
+The various $\star$.mod files needed to define a scan are listed in a small text file named {\tt modules.txt}, which simply contains a line for each .mod file specifying the file name, core duration, and whether it is an RF excitation module, readout module, or gradients-only module.
 Values are tab-separated.
-A {\tt cores.txt} file for our simple spin-warp imaging example may look like this:
+A {\tt modules.txt} file for our simple spin-warp imaging example may look like this:
 \begin{lstlisting}
 Total number of unique cores
 3
 wavfile_name	duration(us)	hasRF?	hasDAQ?
-tipdown.wav	0	1	0
-readout.wav	0	0	1
-spoiler.wav	0	0	0
+tipdown.mod	0	1	0
+readout.mod	0	0	1
+spoiler.mod	0	0	0
 \end{lstlisting}
-A duration of 0 means that the minimum core duration for that .wav file will be used.
+A duration of 0 means that the minimum core duration for that .mod file will be used.
 
 \subsection{\tt scanloop.txt}
 Finally, the complete MR scan loop is specified in {\tt scanloop.txt}, in which each line corresponds to a separate {\tt startseq()} call in\toppe.
@@ -70,8 +70,8 @@ For long scans, {\tt scanloop.txt} can contain many tens of thousands of lines.
 
 \mywrapfigure{overview}{R}{0.99}{
 Overview of pulse sequence programming with\toppe.
-The toppe/toppe.psd.o executables load the .wav files listed in {\tt cores.txt}, and play them out according to the instructions in {\tt scanloop.txt}.
-Each .wav file contains the RF and gradient waveform shapes for one core.
+The toppe/toppe.psd.o executables load the .mod files listed in {\tt modules.txt}, and play them out according to the instructions in {\tt scanloop.txt}.
+Each .mod file contains the RF and gradient waveform shapes for one core.
 A core is dedicated to either RF excitation, data acquisition, or gradients-only.
 With this setup, arbitrary sequences of RF and gradient pulses can be played out, which enables rapid pulse sequence prototyping without the need for EPIC programming.
 For detailing sequence timing information, see Ch.~\ref{ch:timing}.
