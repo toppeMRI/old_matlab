@@ -1,6 +1,6 @@
 # TOPPE sequence examples
 
-## Create TOPPE sequence files
+## Creating TOPPE sequence files
 
 Each subfolder contains a MATLAB script **'main.m'** which generates the file **'scan.tgz'**, a tar file that contains the following TOPPE files:
 

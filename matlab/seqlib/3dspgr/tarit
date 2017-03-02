@@ -3,6 +3,6 @@ cp gre-fov208mm-npix208-ncycles0.0-oprbw31.250-zres5mm-29-Nov-2016.mod readout.m
 cp spoiler-zres5mm-ncycles2-10-Jun-2015.mod spoiler.mod
 
 rm scan.tgz
-tar czf scan.tgz modules.txt scanloop.txt tipdown.mod readout.mod spoiler.mod 
+tar czf scan.tgz modules.txt scanloop.txt tipdown.mod readout.mod spoiler.mod legacy*
 
-rm tipdown.mod readout.mod spoiler.mod scanloop.txt
+#rm tipdown.mod readout.mod spoiler.mod scanloop.txt
