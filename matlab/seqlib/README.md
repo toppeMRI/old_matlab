@@ -38,7 +38,7 @@ $ cd /usr/g/bin/;
 $ tar xzf scan.tgz
 ```
 
-Next, prescribe and run the toppe sequence (currently named 'toppe9a').
+Next, prescribe and run the toppe sequence (e.g., 'toppev1').
 
 
 
