@@ -1,4 +1,4 @@
-# TOPPE MATLAB functions
+# TOPPE MATLAB repository
 
 The 'lib' subfolder in this respository contains basic MATLAB functions for creating and viewing TOPPE sequence files.
 
