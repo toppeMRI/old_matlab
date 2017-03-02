@@ -2,7 +2,7 @@
 
 ## 3D RF-spoiled gradient-recalled echo (SPGR/FLASH/T1-FFE)
 
-This folder contains the MATLAB script 'main.m' which generates the file 'scan.tgz' containing the following TOPPE files:
+This folder contains the MATLAB script **'main.m'** which generates the file **'scan.tgz'** containing the following TOPPE files:
 
 + modules.txt
 + scanloop.txt
@@ -10,13 +10,11 @@ This folder contains the MATLAB script 'main.m' which generates the file 'scan.t
 + readout.mod
 + spoiler.mod
 
-In MATLAB, do:
+In MATLAB, simply do:
 
 ``` >> main; ```
 
-This will generate scanloop.txt, and create scan.tgz containing TOPPE sequence files for this scan.
-
-To scan, copy scan.tgz to /usr/g/bin/ on the scanner, open a console and type:
+To **scan**, copy scan.tgz to /usr/g/bin/ on the scanner, open a console and type:
 
 ```
 >> cd /usr/g/bin/;
