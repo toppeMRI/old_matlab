@@ -1,5 +1,7 @@
 # TOPPE sequence examples
 
+## Create TOPPE sequence files
+
 Each subfolder contains a MATLAB script **'main.m'** which generates the file **'scan.tgz'**, a tar file that contains the following TOPPE files:
 
 + modules.txt
@@ -16,6 +18,19 @@ In MATLAB, simply do:
 
 ``` >> main; ```
 
+
+## Pre-viewing the sequence in MATLAB
+
+Use toppe/matlab/playseq.m to view the sequence in movie loop mode, e.g.,:
+
+```
+>> playseq('scanloop.txt',nModPerTR,nTRskip);
+```
+where nModPerTR is the number of modules per TR, and nTRskip is the number of TRs to skip (for faster looping).
+
+
+## Scanning
+
 To **scan**, copy scan.tgz to /usr/g/bin/ on the scanner, open a console and type:
 
 ```
@@ -24,5 +39,6 @@ $ tar xzf scan.tgz
 ```
 
 Next, prescribe and run the toppe sequence (currently named 'toppe9a').
+
 
 

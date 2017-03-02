@@ -1,0 +1,25 @@
+
+\chapter{Controlling sequence timing}
+\label{ch:timing}
+
+The default core duration is set to the value specified in \texttt{cores.txt}, however the duration can be extended in real-time by setting the value of the 'textra' column in {\tt scanloop.txt} to a non-zero value.
+This allows the sequence timing to be controlled dynamically, e.g., for the purpose of varying TE or TR during a scan.
+
+If the minimum core duration exceeds the prescribed duration in {\tt cores.txt}, the minimum core duration is used (without warning).
+It is therefore perfectly fine to set the core duration in {\tt cores.txt} to '0', since this guarantees that the minimum duration will be used which is often the desired behavior.
+
+Figure~\ref{fig:timing} shows detailed timing information for the three core types: gradients-only, RF excitation, and data acquisition.
+For gradients-only cores, the minimum core duration is equal to the waveform duration plus the controls variables (CVs) 'start\_core', 'timetrwait', and 'timessi'.
+These have been determined empirically, and are currently set to 224us, 64us, and 100us, respectively.
+For RF and acquisition cores, the core duration must be extended by 'myrfdel' and 'daqdel', respectively, to account for gradient delays with respect to RF transmission and data acquisition, respectively.
+%
+\myfigure{timing}{0.75}{
+Detailed timing diagram for the three core types:
+(a) gradients-only, (b) RF excitation, and (c) data acquisition.
+The labels correspond to Control Variables (CVs) in{\toppe}.
+Note that \texttt{scansim.m} uses timing values in \texttt{timing.txt} (e.g., \texttt{example/timing.txt}) to reproduce the precise sequence timing one should expect to observe on the scanner.
+}
+%
+
+
+
