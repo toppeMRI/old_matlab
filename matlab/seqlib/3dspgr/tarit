@@ -1,0 +1,8 @@
+cp tipdown90-opslthick2.0cm-ncycles0-ispresto0-tbw4-dz0.0-15-May-2015.mod tipdown.mod
+cp gre-fov208mm-npix208-ncycles0.0-oprbw31.250-zres5mm-29-Nov-2016.mod readout.mod
+cp spoiler-zres5mm-ncycles2-10-Jun-2015.mod spoiler.mod
+
+rm scan.tgz
+tar czf scan.tgz modules.txt scanloop.txt tipdown.mod readout.mod spoiler.mod 
+
+rm tipdown.mod readout.mod spoiler.mod scanloop.txt
