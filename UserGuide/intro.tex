@@ -14,9 +14,9 @@ With\toppe, the task of pulse programming a GE scanner becomes one of creating t
 \toppe~was developed as a research tool at the fMRI laboratory at University of Michigan, and has to date been used in several projects including stack-of-spirals imaging, Bloch-Siegert B1+ mapping, echo-shifted RF-spoiled imaging (PRESTO), steady-state imaging with 3D tailored RF excitation, and dual-echo steady-state (DESS) imaging.
 
 We are currently making \toppe~compatible with {\bf Pulseq}, an open file format for compactly describing MR sequences.
-See Chapter~\ref{ch:pulseq} for more information about using\toppe~as a GE ``interpreter module'' for Pulseq files.
+See Chapter~\ref{ch:pulseq} for more information about using \toppe~as a GE ``interpreter module'' for Pulseq files.
 
-This is the first 'beta' release of\toppe, and \textbf{your feedback} is most welcome. 
+This is the second 'beta' release of \toppe, and \textbf{your feedback} is most welcome. 
 %Finally, if you are interesting in joining the development team, we'd love to hear from you.
 
 
@@ -69,10 +69,15 @@ For long scans, {\tt scanloop.txt} can contain many tens of thousands of lines.
 %Figure~\ref{fig:overview} summarizes the ...
 
 \mywrapfigure{overview}{R}{0.99}{
-Overview of pulse sequence programming with\toppe.
-The toppe/toppe.psd.o executables load the .mod files listed in {\tt modules.txt}, and play them out according to the instructions in {\tt scanloop.txt}.
-Each .mod file contains the RF and gradient waveform shapes for one core.
-A core is dedicated to either RF excitation, data acquisition, or gradients-only.
+Overview of pulse sequence programming with \toppe.
+The TOPPE sequence files (orange) specify all details of the MR acquisition, such as RF phase cycling, gradient waveforms, and timing information.
+These files are created in MATLAB using the TOPPE MATLAB toolbox (\url{https://github.com/toppeMRI/toppe/}).
+The TOPPE sequence files are passed on to the TOPPE interpreter (green), a binary executable that executes the sequence on the scanner.
+Source code (EPIC) for the interpreter is available for download on the GE Collaboration Community site (\url{https://collaborate.mr.gehealthcare.com/}).
+The interpreter only needs to be compiled and installed once per scanner software upgrade.
+The interpreter, i.e., the \toppe/\psdname.psd.o executables, loads the .mod files listed in {\tt modules.txt}, and plays them out according to the instructions in {\tt scanloop.txt}.
+Each .mod file contains the RF and gradient waveform shapes for one module.
+A module is dedicated to either RF excitation, data acquisition, or gradients-only.
 With this setup, arbitrary sequences of RF and gradient pulses can be played out, which enables rapid pulse sequence prototyping without the need for EPIC programming.
 For detailing sequence timing information, see Ch.~\ref{ch:timing}.
 }

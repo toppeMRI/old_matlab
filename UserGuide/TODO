@@ -1,5 +1,0 @@
-./pulseq/
-./psd/: toppe.e
-./matlab/: mat2wav, readwav, scansim, readloop, ...
-./example/: writeloop.m, etc
-./wavgen/
