@@ -6,8 +6,8 @@ This folder contains the MATLAB script **'main.m'** which generates the file **'
 
 + modules.txt
 + scanloop.txt
-+ tipdown.mod
-+ readout.mod
++ tipdown.mod (a .mod file with this name *must* exist on the scanner)
++ readout.mod (a .mod file with this name *must* exist on the scanner)
 + spoiler.mod
 
 In MATLAB, simply do:
