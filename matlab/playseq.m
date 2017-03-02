@@ -1,4 +1,4 @@
-function playseq(loopfile,nModPerTR,nTRskip)
+function playseq(loopfile,nModPerTR,nTRskip,tpause)
 % function playseq(loopfile,nModPerTR,nTRskip)
 %
 % Loop through a scanloop.txt file ("play" sequence)
@@ -7,6 +7,7 @@ function playseq(loopfile,nModPerTR,nTRskip)
 %    loopfile:   'scanloop.txt'
 %    nModPerTR:  number of modules per TR
 %    nTRskip:    display only every nTRskip TRs (for speeding up loop)
+%    tpause:     delay before next TR (sec)
 %
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -27,11 +28,15 @@ function playseq(loopfile,nModPerTR,nTRskip)
 %
 % $Id: playseq.m,v 1.1 2017/02/15 18:24:09 jfnielse Exp $
 
+if ~exist('tpause','var')
+	tpause = 0.02;   % sec
+end
+
 d = readloop(loopfile);
 nt = size(d,1);
 
 for ii = 1:((1+nTRskip)*nModPerTR):nt
 	scansim(ii,ii+nModPerTR-1,d);
 	title(num2str(ii));
-	pause(0.02);     % to allow display to refresh
+	pause(tpause);     % to allow display to refresh
 end

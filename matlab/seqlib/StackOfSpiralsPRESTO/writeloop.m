@@ -17,7 +17,7 @@ nz_samp = 30;   % Sample this many kz points per time-frame
                 % NB! To make ghost phase alternate b/w 0 and 180 (relative to main object) ever other frame, 
                 % we want mod(nleafs*nz_samp*rf_spoil_seed,360) = 180. 
 trvol = 3;      % (approximate) time for fully sampled image volume (sec)
-dur = 4*60;     % total duration of rs-fMRI scan (sec)
+dur = 1*60;     % total duration of resting-state fMRI scan (sec)
 
 %rf_spoil_seed = 150;    % for nleafs=3, nz=60, and undersampling Rxy*rz=6, we have 30 TRs per time-frame.
 rf_spoil_seed = 150;    % for 30 kz platters per frame and rf_spoil_seed=150, we have mod(nz_samp*rf_spoil_seed)=180.

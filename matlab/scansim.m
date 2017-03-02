@@ -44,7 +44,7 @@ timessi = fscanf(fid, '%d\n', 1);
 fclose(fid);
 
 % get waveforms
-fid = fopen('cores.txt', 'r', 'ieee-be');
+fid = fopen('modules.txt', 'r', 'ieee-be');
 s = fgets(fid);  % skip line
 ncores = fscanf(fid, '%d\n', 1);
 s = fgets(fid);  % skip line
