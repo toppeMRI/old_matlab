@@ -1,6 +1,6 @@
 # TOPPE MATLAB functions
 
-The 'matlab' folder in this respository contains MATLAB code for reading, writing, and viewing TOPPE sequence files.
+The 'matlab' folder in this respository contains MATLAB code for creating and viewing TOPPE sequence files.
 
 All code contained in this repository is open-source under the terms of the GNU LGPL 2.0 license (see LICENSE for details).
 
