@@ -5,7 +5,9 @@
 This folder contains the MATLAB script **'main.m'** which generates the file **'scan.tgz'** containing the following TOPPE files:
 
 + modules.txt
+  + lists the three .mod files, and indicates whether a module is an RF excitation, readout, or gradients-only module.
 + scanloop.txt
+  + Lists the order in which to play out the modules, as well as all other dynamic sequence information.
 + tipdown.mod (a .mod file with this name *must* exist on the scanner)
 + readout.mod (a .mod file with this name *must* exist on the scanner)
 + spoiler.mod
