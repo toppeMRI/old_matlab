@@ -1,19 +1,16 @@
-# TOPPE sequence example 
+# TOPPE sequence examples
 
-## 3D RF-spoiled gradient-recalled echo (SPGR/FLASH/T1-FFE)
-
-This folder contains the MATLAB script **'main.m'** which generates the file **'scan.tgz'** containing the following TOPPE files:
+Each subfolder contains a MATLAB script **'main.m'** which generates the file **'scan.tgz'**, a tar file that contains the following TOPPE files:
 
 + modules.txt
-  + lists the three .mod files, and indicates whether a module is an RF excitation, readout, or gradients-only module.
+  + Lists the .mod files, and indicates whether a module is an RF excitation, readout, or gradients-only module.
 + scanloop.txt
   + Lists the order in which to play out the modules, as well as all other dynamic sequence information.
 + tipdown.mod (a .mod file with this name *must* exist on the scanner)
   + RF excitation module that excites a 2cm slab.
 + readout.mod (a .mod file with this name *must* exist on the scanner)
   + 3D Cartesian (spin-warp) readout module.
-+ spoiler.mod
-  + A z gradient trapezoid.
++ Any additional .mod files listed in modules.txt.
 
 In MATLAB, simply do:
 
