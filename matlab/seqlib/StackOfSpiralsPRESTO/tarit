@@ -1,0 +1,4 @@
+rm scan.tgz
+tar czf scan.tgz modules.txt scanloop.txt tipdown.mod readout.mod
+rm scanloop.txt
+
