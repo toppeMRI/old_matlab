@@ -28,7 +28,7 @@ In MATLAB, simply do:
 
 ## Step 2: Pre-view the sequence in MATLAB
 
-Use the script matlab/playseq.m to view the sequence in movie loop mode, e.g.,:
+Use the script playseq.m to view the sequence in movie loop mode, e.g.,:
 
 ```
 >> playseq('scanloop.txt',nModPerTR,nTRskip);
