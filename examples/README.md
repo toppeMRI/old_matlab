@@ -1,6 +1,13 @@
 # TOPPE sequence examples
 
-## Creating TOPPE sequence files
+Working with TOPPE involves three basic steps:
+
+1. Create the required sequence files: modules.txt, scanloop.txt, and the .mod files.
+2. Pre-view the sequence using playseq.m.
+3. Scan.
+
+
+## Step 1: Create TOPPE sequence files
 
 Each subfolder contains a MATLAB script **'main.m'** which generates the file **'scan.tgz'**, a tar file that contains the following TOPPE files:
 
@@ -19,9 +26,9 @@ In MATLAB, simply do:
 ``` >> main; ```
 
 
-## Pre-viewing the sequence in MATLAB
+## Step 2: Pre-view the sequence in MATLAB
 
-Use toppe/matlab/playseq.m to view the sequence in movie loop mode, e.g.,:
+Use the script matlab/playseq.m to view the sequence in movie loop mode, e.g.,:
 
 ```
 >> playseq('scanloop.txt',nModPerTR,nTRskip);
@@ -29,7 +36,7 @@ Use toppe/matlab/playseq.m to view the sequence in movie loop mode, e.g.,:
 where nModPerTR is the number of modules per TR, and nTRskip is the number of TRs to skip (for faster looping).
 
 
-## Scanning
+## Step 3: Scan
 
 To **scan**, copy scan.tgz to /usr/g/bin/ on the scanner, open a console and type:
 
