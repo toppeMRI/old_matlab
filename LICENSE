@@ -1,22 +1,3 @@
-Many parts of this distribution are published under the LGPL 2.0 license, 
-which in essence allows you to freely copy, modify, and distribute the 
-software as long as you track changes to source files and disclose the 
-source code. The full LGPL 2.0 license statement is included at the end
-of this License file.
-
-Each file that is published here under the LGPL 2.0 license contains
-the following statement: "This file is part of the TOPPE development 
-environment for platform-independent MR pulse programming."
-Several files do not contain this statement and are therefore not meant
-to be subject to the license specified in this document. In particular, 
-the EPIC source .e file for the TOPPE "interpreter" (toppe.e, toppe7e.e, 
-or similar) is provided here without a particular license statement, and 
-you are free to copy and modify toppe.e for any use (even commercial). 
-
-Jon-Fredrik Nielsen
-jfnielse@umich.edu
-
-
                   GNU LIBRARY GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
