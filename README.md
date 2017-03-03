@@ -10,4 +10,4 @@ For an overview of the TOPPE platform, including the 'official' TOPPE user guide
 
 To scan, you'll also need the 'EPIC' source code for the TOPPE binary executable; see [https://toppemri.github.io/](https://toppemri.github.io/) for details.
 
-This repository is under construction. For questions about TOPPE, contact Jon-Fredrik Nielsen at jfnielse@umich.edu.
+For questions about TOPPE, contact Jon-Fredrik Nielsen at jfnielse@umich.edu.
