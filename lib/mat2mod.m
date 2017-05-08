@@ -4,11 +4,12 @@ function mat2mod(rho,theta,gx,gy,gz,nomflip,ofname,desc,hdrfloats,hdrints,addrfr
 %
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
-% rho      -- Gauss
+% rho      -- Gauss. Even if module is not intended for excitation, you must specify a non-zero rho waveform to avoid problems with sub_myrfstat().
 % theta    -- [-pi, pi]
 % gx/gy/gz -- Gauss/cm
+% nomflip  -- degrees. Excitation flip angle. If module is not intended for excitation, this value will be ignored by the scanner.
 % ofname   -- output filename (e.g., mypulse.mod)
-% desc     -- ASCII descriptor
+% desc     -- text string (ASCII) descriptor
 % hdrfloats -- additional floats to put in header (max 12) (starting at paramsfloat[20])
 % hdrints  -- [npre ndur [npre2 ndur2 npre3 ndur3 ...]] -- number of samples before start of RF/DAQ, 
 %             and number of samples in DAQ (for one or more echoes)
