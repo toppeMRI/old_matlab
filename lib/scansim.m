@@ -1,6 +1,7 @@
 function [rho, th, gx, gy, gz] = scansim(nstart, nstop, d)
 % function [rho, th, gx, gy, gz] = scansim(nstart, nstop, [d])
-% display pulse sequence, as specified in cores.txt, scanloop.txt, and timing.txt
+%
+% Display pulse sequence, as specified in modules.txt, scanloop.txt, and timing.txt
 %
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %

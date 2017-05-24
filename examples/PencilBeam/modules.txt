@@ -1,0 +1,7 @@
+Total number of unique cores
+4
+fname	duration(us)	hasRF?	hasDAQ?
+tipdown.mod	10000	1	0
+rf180.mod	15000	1	0
+readout.mod	0	0	1
+spoiler.mod	960000	0	0

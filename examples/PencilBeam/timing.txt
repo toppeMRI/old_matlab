@@ -1,0 +1,6 @@
+# toppe.e timing CVs (us).
+start_core 224
+myrfdel 94
+daqdel 80
+timetrwait 64
+timessi 100
