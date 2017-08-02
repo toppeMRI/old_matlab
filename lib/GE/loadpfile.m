@@ -22,10 +22,10 @@ fid = fopen(pfile,'r','l');
 rdb_hdr = read_rdb_hdr(fid,24);
 fclose(fid);
 
-ndat    = rdb_hdr.frame_size
-nslices = rdb_hdr.nslices
-nechoes = rdb_hdr.nechoes
-nviews  = rdb_hdr.nframes
+ndat    = rdb_hdr.frame_size;
+nslices = rdb_hdr.nslices;
+nechoes = rdb_hdr.nechoes;
+nviews  = rdb_hdr.nframes;
 ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1;
 
 %dat = zeros([ndat ncoils nslices nechoes nviews]);
