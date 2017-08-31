@@ -2,7 +2,6 @@
 
 Functions for writing/reading .mod files, and for previewing TOPPE sequences in movie loop mode.
 
-Current version: v2
+Subfolders correspond to TOPPE versions.
 
-For older versions, see subfolders ./v1/ etc.
 
