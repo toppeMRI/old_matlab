@@ -1,5 +1,7 @@
 # TOPPE sequence examples
 
+Subfolders correspond to toppe versions.
+
 Working with TOPPE involves three basic steps:
 
 1. Create the required sequence files: modules.txt, scanloop.txt, and the .mod files.
