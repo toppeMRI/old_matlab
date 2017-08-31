@@ -21,7 +21,6 @@ function d = readloop(loopfile)
 %
 % $Id: readloop.m,v 1.23 2017/02/15 18:24:09 jfnielse Exp $
 
-%d = []; 
 %NL = 11;   % toppe2
 %NL = 10;   % toppe.e and toppe_so.e
 %NL = 13;   % toppe3, toppe4
@@ -38,7 +37,7 @@ maxview  = fscanf(fid, '%d\n', 1);
 %rhrecon = fscanf(fid, '%d\n', 1);
 fclose(fid);
 
-% read data (tab-separated, starting at row 4
+% read data (tab-separated, starting at row 4)
 d = dlmread(loopfile,'\t',3,0);
 
 return;
