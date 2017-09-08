@@ -32,7 +32,7 @@ function [rho, th, gx, gy, gz, rho1, th1, gx1, gy1, gz1, textra] = dispseq(nstar
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: dispseq.m,v 1.2 2017/08/29 16:14:28 jfnielse Exp $
+% $Id: dispseq.m,v 1.5 2017/09/08 16:27:18 jfnielse Exp $
 
 if ~exist('nstart','var')
 	nstart = 1;
@@ -76,7 +76,7 @@ for ic = 1:ncores
 	cores{ic}.hasDAQ = fscanf(fid, '%d\n', 1);
 	[desc,cores{ic}.rho,cores{ic}.th,cores{ic}.gx,cores{ic}.gy,cores{ic}.gz,cores{ic}.paramsint16,cores{ic}.paramsfloat] ...
 		= readmod(cores{ic}.fname,false);
-	cores{ic}.wavdur = numel(cores{ic}.gx)*4;   % waveform duration [us]
+	cores{ic}.wavdur = numel(cores{ic}.gx(:,1))*4;   % waveform duration [us]
 end
 fclose(fid);
 
@@ -115,20 +115,23 @@ for it = nstart:nstop
 		textra = textra + d(it,14);
 	end
 
-	% apply in-plane (xy) rotation
+	waveform = d(it,16);
+
+	% get gradients and apply in-plane (xy) rotation
+	gxit = cores{ic}.gx(:,waveform);
+	gyit = cores{ic}.gy(:,waveform);
+	gzit = cores{ic}.gz(:,waveform);
 	iphi = d(it,11);
 	phi = iphi/max_pg_iamp*pi;    % rad, [-pi pi]
-	Gxy = [cos(phi) -sin(phi); sin(phi) cos(phi)]*[cores{ic}.gx(:)'; cores{ic}.gy(:)'];
+	Gxy = [cos(phi) -sin(phi); sin(phi) cos(phi)]*[gxit(:)'; gyit(:)'];
 	gxit = Gxy(1,:)';
 	gyit = Gxy(2,:)';
-
-	waveform = d(it,15);
-
+	
 	rho1 = [zeros(round((start_core+coredel)/dt),1); ia_rf/max_pg_iamp*cores{ic}.rho(:,waveform); zeros(round((timetrwait+timessi)/dt),1)];
 	th1  = [zeros(round((start_core+coredel)/dt),1); ia_th/max_pg_iamp*cores{ic}.th(:,waveform);  zeros(round((timetrwait+timessi)/dt),1)];
-	gx1  = [zeros(round((start_core)/dt),1);         ia_gx/max_pg_iamp*gxit(:,waveform);          zeros(round((timetrwait+timessi+coredel)/dt),1)];
-	gy1  = [zeros(round((start_core)/dt),1);         ia_gx/max_pg_iamp*gyit(:,waveform);          zeros(round((timetrwait+timessi+coredel)/dt),1)];
-	gz1  = [zeros(round((start_core)/dt),1);         ia_gz/max_pg_iamp*cores{ic}.gz(:,waveform);  zeros(round((timetrwait+timessi+coredel)/dt),1)];
+	gx1  = [zeros(round((start_core)/dt),1);         ia_gx/max_pg_iamp*gxit(:);          zeros(round((timetrwait+timessi+coredel)/dt),1)];
+	gy1  = [zeros(round((start_core)/dt),1);         ia_gx/max_pg_iamp*gyit(:);          zeros(round((timetrwait+timessi+coredel)/dt),1)];
+	gz1  = [zeros(round((start_core)/dt),1);         ia_gz/max_pg_iamp*gzit(:);  zeros(round((timetrwait+timessi+coredel)/dt),1)];
 
 	rho = [rho; rho1; zeros(round(textra/dt),1)];
 	th  = [th;  th1;  zeros(round(textra/dt),1)];
@@ -145,9 +148,10 @@ if dodisplay
 	gmax = 5;  % Gauss/cm
 	subplot(511); plot(T, rho); ylabel('rho');   axis([T(1) 1.01*T(end) -1.1*min(rho) 1.1*max(rho)]);
 	subplot(512); plot(T, th);  ylabel('theta'); axis([T(1) 1.01*T(end) -1.3*pi 1.3*pi]);
-	subplot(513); plot(T, gx);  ylabel('gx'); axis([T(1) 1.01*T(end) -1.2*gmax 1.2*gmax]);;
-	subplot(514); plot(T, gy);  ylabel('gy'); axis([T(1) 1.01*T(end) -1.2*gmax 1.2*gmax]);;
-	subplot(515); plot(T, gz);  ylabel('gz'); axis([T(1) 1.01*T(end) -1.2*gmax 1.2*gmax]);;
+	subplot(513); plot(T, gx);  ylabel('gx'); axis([T(1) 1.01*T(end) -1.05*gmax 1.05*gmax]);;
+	%gmax = 1;  % Gauss/cm
+	subplot(514); plot(T, gy);  ylabel('gy'); axis([T(1) 1.01*T(end) -1.05*gmax 1.05*gmax]);;
+	subplot(515); plot(T, gz);  ylabel('gz'); axis([T(1) 1.01*T(end) -1.05*gmax 1.05*gmax]);;
 	xlabel('msec');
 end
 

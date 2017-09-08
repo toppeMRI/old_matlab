@@ -1,6 +1,6 @@
 function mat2mod(rho,theta,gx,gy,gz,nomflip,ofname,desc,hdrfloats,hdrints,addrframp,gsliceselect)
 % function mat2mod(rho,theta,gx,gy,gz,nomflip,ofname,desc,[hdrfloats,hdrints,addrframp,gsliceselect])
-% Write waveforms to .mod file, use with toppe.e psd on GE scanners.
+% Write waveforms to .mod file, use with toppev2 psd on GE scanners.
 %
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
