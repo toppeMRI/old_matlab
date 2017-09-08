@@ -19,20 +19,20 @@ function plotmod(fname)
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 
 [desc,rho,theta,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname);
-b1 = rho.*exp(i*theta);
+%b1 = rho.*exp(i*theta);
 
-ncoils = size(b1,2);
-nt = size(b1,1);
+ncoils = size(rho,2);
+nt = size(rho,1);
 dt = 4e-3;  % ms
 T = linspace(dt/2,nt*dt-dt/2,nt);
 
-cols = 'bbbbbbbb';
+cols = 'brgmbrgm';
 
 figure;
 for c = 1:ncoils
-	subplot(2,ncoils,c);        plot(T,abs(b1(:,c)),cols(c));   ylabel(['coil ' num2str(c) ', abs(b1) (Gauss)']);
+	subplot(2,ncoils,c);        plot(T,rho(:,c),cols(c));   ylabel(['coil ' num2str(c) ', abs(b1) (Gauss)']);
 	xlabel('time (msec)');
-	subplot(2,ncoils,c+ncoils); plot(T,angle(b1(:,c)),cols(c)); ylabel(['coil ' num2str(c) ', angle(b1)']);
+	subplot(2,ncoils,c+ncoils); plot(T,theta(:,c),cols(c)); ylabel(['coil ' num2str(c) ', angle(b1)']);
 	xlabel('time (msec)');
 end
 
