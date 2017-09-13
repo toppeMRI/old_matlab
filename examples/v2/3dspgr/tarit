@@ -1,6 +1,6 @@
-cp 
+cp tipdown90-opslthick2.0cm-ncycles0.0-ispresto0-tbw4-dz0.0-13-Sep-2017.mod tipdown.mod
 cp gre-fov180mm-npix64-ncycles2.0-oprbw31.250-zres3mm-13-Sep-2017.mod readout.mod
 
-rm scan.tgz
-tar czf scan.tgz modules.txt scanloop.txt tipdown.mod readout.mod 
+rm scan,3dspgr.tgz
+tar czf scan,3dspgr.tgz modules.txt scanloop.txt tipdown*.mod readout.mod 
 

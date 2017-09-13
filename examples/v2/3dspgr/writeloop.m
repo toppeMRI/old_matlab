@@ -11,8 +11,8 @@ dabreset = 3;
 max_pg_iamp = 2^15-2;  
 
 % acquisition matrix
-ny = 208;  
-nz = 11;
+ny = 64;  
+nz = 18*5;
 nave = 1;    % number of averages ("nex")
 
 % set flip angle and related pulse sequence amplitudes
@@ -72,14 +72,14 @@ for iim = 1:nave
 			textra = 0;
 			f = 0;
 			core = 1;  % tipdown RF pulse
-			d = [d; core ia_rf ia_th 0*max_pg_iamp 0*max_pg_iamp max_pg_iamp dabslice dabecho dabview daboff phi irfphase irfphase 0 f];
+			waveform = 1;
+			d = [d; core ia_rf ia_th 0*max_pg_iamp 0*max_pg_iamp max_pg_iamp dabslice dabecho dabview daboff phi irfphase irfphase 0 f waveform];
 			%core = 2;  % spin-echo pulse
 			%f = f/2;
 			%d = [d; core ia_rf ia_th max_pg_iamp 0*max_pg_iamp 0*max_pg_iamp dabslice dabecho dabview daboff phi irfphase irfphase 0 f];
 			core = 2;  % readout
-			d = [d; core 0 0 max_pg_iamp ia_gy ia_gz dabslice dabecho dabview dabmode phi irfphase irfphase 0 0];
-			core = 3;  % gradient spoiler
-			d = [d; core 0 0 0 0 max_pg_iamp dabslice dabecho dabview daboff phi irfphase irfphase textra 0]; 
+			waveform = 1;
+			d = [d; core 0 0 max_pg_iamp ia_gy ia_gz dabslice dabecho dabview dabmode phi irfphase irfphase 0 0 waveform];
 		end
 	end
 end
