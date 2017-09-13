@@ -1,0 +1,2 @@
+writeloop;
+system('./tarit');

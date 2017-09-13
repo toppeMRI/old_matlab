@@ -1,0 +1,6 @@
+cp 
+cp gre-fov180mm-npix64-ncycles2.0-oprbw31.250-zres3mm-13-Sep-2017.mod readout.mod
+
+rm scan.tgz
+tar czf scan.tgz modules.txt scanloop.txt tipdown.mod readout.mod 
+
