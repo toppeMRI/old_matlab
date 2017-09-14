@@ -16,7 +16,7 @@ nz = 18*5;
 nave = 1;    % number of averages ("nex")
 
 % set flip angle and related pulse sequence amplitudes
-nomflip = 90;
+nomflip = 25;
 flip = 10;
 ia_rf = 2*round(flip/nomflip*max_pg_iamp/2); 
 ia_th = max_pg_iamp;
