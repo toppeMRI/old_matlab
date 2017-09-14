@@ -42,9 +42,7 @@ for iim = 1:nave
 	end
 
 	for iz = 0:nz
-
 		for iy = 1:ny
-
 			if iz>0	
 				dabslice = iz;   % rhnslices = max(dabslice)+1, must be even
 				%dabview = (iim-1)*ny+iy;
@@ -69,15 +67,15 @@ for iim = 1:nave
 			%core = 2; 
 			%d = [d; core 0 0 0 0*ia_gy 0*ia_gz dabslice dabecho dabview dabreset 0 irfphase irfphase 0 0];
 
+			% tipdown RF pulse
 			textra = 0;
 			f = 0;
-			core = 1;  % tipdown RF pulse
+			core = 1;  
 			waveform = 1;
 			d = [d; core ia_rf ia_th 0*max_pg_iamp 0*max_pg_iamp max_pg_iamp dabslice dabecho dabview daboff phi irfphase irfphase 0 f waveform];
-			%core = 2;  % spin-echo pulse
-			%f = f/2;
-			%d = [d; core ia_rf ia_th max_pg_iamp 0*max_pg_iamp 0*max_pg_iamp dabslice dabecho dabview daboff phi irfphase irfphase 0 f];
-			core = 2;  % readout
+
+			% readout
+			core = 2;
 			waveform = 1;
 			d = [d; core 0 0 max_pg_iamp ia_gy ia_gz dabslice dabecho dabview dabmode phi irfphase irfphase 0 0 waveform];
 		end
@@ -86,18 +84,6 @@ end
 
 
 % write scanloop.txt
-nt = size(d,1);              % number of startseq() calls   
-maxslice = max(d(:,7));
-maxecho = max(d(:,8));
-maxview = max(d(:,9));
-fname = 'scanloop.txt';
-fid = fopen(fname, 'w', 'ieee-be');
-fprintf(fid, 'nt\tmaxslice\tmaxecho\tmaxview\n');
-fprintf(fid, '%d\t%d\t%d\t%d\n', nt, maxslice, maxecho, maxview);
-fprintf(fid, 'Core ia_rf ia_th ia_gx ia_gy ia_gz dabslice dabecho dabview dabon phi rfphase recphase \n');
-fclose(fid);
-fprintf(1,'\twriting scanloop.txt...');
-dlmwrite(fname, d, '-append', 'delimiter', '\t'); 
-fprintf(1,' done\n');
+loop2txt(d);
 
 return;
