@@ -141,7 +141,7 @@ end
 if dodisplay
 	T = (0:(numel(rho)-1))*dt/1000; % msec
 	gmax = 5;  % Gauss/cm
-	subplot(511); plot(T, rho); ylabel('rho');   axis([T(1) 1.01*T(end) -1.1*min(rho) 1.1*max(rho)]);
+	subplot(511); plot(T, rho); ylabel('rho');   axis([T(1) 1.01*T(end) -1.1*max(abs(rho)) 1.1*max(abs(rho))]);
 	subplot(512); plot(T, th);  ylabel('theta'); axis([T(1) 1.01*T(end) -1.3*pi 1.3*pi]);
 	subplot(513); plot(T, gx);  ylabel('gx'); axis([T(1) 1.01*T(end) -1.2*gmax 1.2*gmax]);;
 	subplot(514); plot(T, gy);  ylabel('gy'); axis([T(1) 1.01*T(end) -1.2*gmax 1.2*gmax]);;
