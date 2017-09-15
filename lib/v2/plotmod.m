@@ -30,9 +30,9 @@ cols = 'bbbbbbbb';
 
 figure;
 for c = 1:ncoils
-	subplot(2,ncoils,c);        plot(T,abs(b1(:,c)),cols(c));   ylabel(['coil ' num2str(c) ', abs(b1) (Gauss)']);
+	subplot(2,ncoils,c);        plot(T,rho(:,c),cols(c));   ylabel(['coil ' num2str(c) ', rho (Gauss)']);
 	xlabel('time (msec)');
-	subplot(2,ncoils,c+ncoils); plot(T,angle(b1(:,c)),cols(c)); ylabel(['coil ' num2str(c) ', angle(b1)']);
+	subplot(2,ncoils,c+ncoils); plot(T,theta(:,c),cols(c)); ylabel(['coil ' num2str(c) ', theta (rad)']);
 	xlabel('time (msec)');
 end
 

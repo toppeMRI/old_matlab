@@ -1,4 +1,4 @@
-cp tipdown_abs.mod tipdown.mod
+cp tipdown_abs_v1.mod tipdown.mod
 cp gre-fov180mm-npix64-ncycles2.0-oprbw31.250-zres3mm-14-Sep-2017.mod readout.mod
 
 rm scan.tgz

@@ -1,0 +1,119 @@
+#!/usr/bin/perl
+#
+# Auto-recon script for 3dft (spin-warp)
+#
+# Based on script from Stanford (Brian Hargreaves)
+#     
+# ----------------------------------------------------------------------
+#	INSTRUCTIONS
+# ----------------------------------------------------------------------
+# (4) 	Copy this to /usr/g/bin/reconNNN on the scanner(s), 
+#		where NNN is unique (Change from 228!).
+#		Then set rhrecon to NNN in PSD, and set rhexecctrl|=2.
+#		Also, you have to write a Matlab recon :)
+#
+# (5) 	Start testing... check each step!!
+#
+#	If you'd like to learn Perl quickly, I recommend a google 
+#	search for "Essential Perl" thanks to Nick Parlante.
+# ----------------------------------------------------------------------
+
+# exit;
+
+# $access = $ARGV[1];
+
+# --- RECON HOST SETTINGS ---#
+#$reconhost = "141.213.95.104";		      # brooks.engin.umich.edu
+$reconhost = "brooks";		      # brooks.engin.umich.edu
+$reconuser = "mruser";
+$recondir = "/home/mruser/rfovfmri/";
+$irtdir = "/net/brooks/export/home/jfnielse/projects/autorfdesign/SPINS2/mtools/irt";  # Jeff's toolbox
+$email = "jfnielse\@umich.edu";			  # see 'notify'
+
+# --- SCANNER SETTINGS ---#
+$scriptname = $0;		# This script name (reconNNN).
+$scanner = $ENV{HOST};          # Scanner name (not always IP...!)
+#$scannerbasedir = "/export/home/jfnielse/projects/ssfpbanding/epic/perl/test/scanner/";
+$scannerbasedir = "/";
+$pfiledir = $scannerbasedir."usr/g/mrraw/";
+$bindir = $scannerbasedir."usr/g/bin/";
+
+
+# ====================================================
+#	Get Time/Date.  Check input arguments and quit if there
+#			are no arguments.
+@timedate = localtime();
+$date = sprintf("%04d-%02d-%02d",$timedate[5]+1900,$timedate[4]+1,$timedate[3]);
+print "$date\n";
+# $datadir = "$recondir$date";
+$datadir = "$recondir";
+if (scalar(@ARGV)<1) {				# Quit if no input.
+	print "\n$scriptname:  No input arguments.\n";	# (Useful to check
+	print "-> To test, run:  $scriptname NNNNN  ";	#  script compiles)
+	print "   (where NNNNN is the pfile number.)\n\n"; 
+	exit;					# 	
+}
+
+
+# ----------------------------------------------------------------------
+#	Make a list of input arguments and log them.
+# ----------------------------------------------------------------------
+$run = $ARGV[0];			# 5-digit run number.
+print $run, "\n" ;
+
+# ----------------------------------------------------------------------
+#	Make data directory on recon host if it doesn't exist.
+# ----------------------------------------------------------------------
+$systemstr = "ssh $reconuser\@$reconhost mkdir -p $datadir";
+print LOG " $systemstr\n";
+system ($systemstr);
+
+
+# ----------------------------------------------------------------------
+#	Copy the P-file and readout.mod to recon host.
+# ----------------------------------------------------------------------
+
+$pfileonly = sprintf("P%05d.7", $run);  # base filename, ie P00512 etc.
+$pfile = $pfiledir.$pfileonly ;
+
+print "transferring $pfile and readout.mod now\n" ;
+$systemstr = "rsync -a -v $pfile -e ssh $reconuser\@$reconhost:$datadir/"; system($systemstr);
+#$systemstr = "scp $pfile $reconuser\@$reconhost:$datadir/"; system($systemstr);
+$systemstr = "scp readout.mod $reconuser\@$reconhost:$recondir/"; system($systemstr);
+
+
+
+# ----------------------------------------------------------------------
+#	Send e-mail notification
+# ----------------------------------------------------------------------
+#system("./notify | telnet");
+
+
+# ----------------------------------------------------------------------
+#	Run off-line B0 map recon and rf pulse design
+# ----------------------------------------------------------------------
+
+# --- MAKE MATLAB SCRIPT 
+$systemstr = ("echo \"% Matlab script, written by $scriptname\">$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"cd $recondir\" >>$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"addpath /net/brooks/export/home/jfnielse/projects/rfovfmri/b0map/recon/\" >>$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"addpath /net/brooks/export/home/jfnielse/github/toppe/matlab/lib/GE\" >>$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"addpath /net/brooks/export/home/jfnielse/github/toppe/matlab/lib/v2/\" >>$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"curdir = pwd; cd $irtdir; setup; cd(curdir); \" >>$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"recon3dft('$datadir/$pfileonly',1);\" >>$bindir/$scriptname.m"); system($systemstr);
+#$systemstr = ("echo \"recon3dft('$datadir/$pfileonly',2);\" >>$bindir/$scriptname.m"); system($systemstr);
+#$systemstr = ("echo \"recon3dft('$datadir/$pfileonly',2,[0 0.4]);\" >>$bindir/$scriptname.m"); system($systemstr);
+$systemstr = ("echo \"pause(20); close all; exit;\" >> $bindir/$scriptname.m"); system($systemstr);
+
+# -- RUN THE SCRIPT IN MATLAB ON REMOTE RECON HOST
+# $systemstr = "rsync -a -v $bindir/$scriptname.m -e ssh $reconuser\@$reconhost:$datadir/"; system($systemstr);
+$systemstr = "scp $bindir/$scriptname.m $reconuser\@$reconhost:$datadir/"; system($systemstr);
+$reconcommand = "nice -19 matlab -nosplash -nodesktop < $datadir/$scriptname.m";
+$systemstr = "ssh -X $reconuser\@$reconhost '$reconcommand'"; system ($systemstr); 
+
+
+#print LOG " $systemstr\n";
+close (LOG);	# Close logfile.
+exit;
+
+# EOF
