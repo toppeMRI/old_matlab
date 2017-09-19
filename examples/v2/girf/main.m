@@ -13,7 +13,9 @@ rmpath ~jfnielse/github/toppe/matlab/lib/v1/
 addpath ~jfnielse/github/toppe/matlab/lib/v2/
 mat2mod(rho,theta,gx,gy,gz,180,'rf180.mod',desc);
 
-
-% Create scan.tgz
+% Create scan.tgz. Untar to /usr/g/bin/ on scanner and scan with toppev2
 writeloop;
 system('./tarit');
+
+% display sequence
+playseq('scanloop.txt',3,0,1);
