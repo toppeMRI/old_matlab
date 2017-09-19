@@ -1,0 +1,3 @@
+rm scan.tgz
+tar czf scan.tgz scanloop.txt modules.txt *.mod
+
