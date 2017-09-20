@@ -3,4 +3,4 @@ Total number of unique cores
 fname	duration(us)	hasRF?	hasDAQ?
 tipdown.mod	0	1	0
 rf180.mod	17000	1	0
-readout.mod	960000	0	1
+readout.mod	0	0	1

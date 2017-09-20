@@ -1,4 +1,4 @@
-function makegirf
+function G = makegirf
 % Play gradients proposed in Vannesjo et al, MRM 69:583-593 (2013):
 % 12 triangular gradients with same slew rate but different time-to-peak.
 %
@@ -31,6 +31,7 @@ end
 T = dwell:dwell:(dwell*N);
 plot(1e3*T,G);
 xlabel('time (msec)');
+ylabel('Gauss/cm');
 hold on;
 
 % interpolate to 4us dwell time
@@ -43,7 +44,6 @@ plot(1e3*T2,G,'ro')
 N = size(G,1);
 paramsint16 = [0 N 0 N];
 mat2mod(0.002*ones(size(G)), 0*G, G, 0*G, 0*G, 90, 'readout.mod', 'GIRF calibration waveforms');
-plotmod('readout.mod');
 
 return;
 
