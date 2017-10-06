@@ -1,7 +1,7 @@
 function dat = loadpfile(pfile)
 % function dat = loadpfile(pfile)
 %
-% Load all data from Pfile, EXCEPT dabslice=0 slot.
+% Load all data from Pfile, EXCEPT dabslice=0 slot (which can contain corrupt data).
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -33,11 +33,11 @@ ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1;
 
 %dat = zeros([ndat ncoils nslices nechoes nviews]);
 fid = fopen(pfile,'r','l');
-for slice = 2:nslices;
+for slice = 2:nslices
 	for echo = 1:nechoes
 		for view = 1:nviews
 			[dattmp pfilesize] = loaddat_ge(fid,rdb_hdr,slice-1,echo-1,view);     % [ndat ncoils]. Skip baseline (0) view.
-			dat(:,:,slice-1,echo,view) = dattmp; %(:,1:16:ncoils);                                     
+			dat(:,:,slice,echo,view) = dattmp; %(:,1:16:ncoils);                                     
 		end
 	end
 end
