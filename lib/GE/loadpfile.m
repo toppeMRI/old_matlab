@@ -33,7 +33,7 @@ ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1;
 
 %dat = zeros([ndat ncoils nslices nechoes nviews]);
 fid = fopen(pfile,'r','l');
-for slice = 2:nslices
+for slice = 2:nslices   % skip first slice (sometimes contains corrupted data)
 	for echo = 1:nechoes
 		for view = 1:nviews
 			[dattmp pfilesize] = loaddat_ge(fid,rdb_hdr,slice-1,echo-1,view);     % [ndat ncoils]. Skip baseline (0) view.
