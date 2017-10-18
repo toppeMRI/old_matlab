@@ -37,7 +37,7 @@ for slice = 2:nslices   % skip first slice (sometimes contains corrupted data)
 	for echo = 1:nechoes
 		for view = 1:nviews
 			[dattmp pfilesize] = loaddat_ge(fid,rdb_hdr,slice-1,echo-1,view);     % [ndat ncoils]. Skip baseline (0) view.
-			dat(:,:,slice,echo,view) = dattmp; %(:,1:16:ncoils);                                     
+			dat(:,:,slice-1,echo,view) = dattmp; %(:,1:16:ncoils);                                     
 		end
 	end
 end
