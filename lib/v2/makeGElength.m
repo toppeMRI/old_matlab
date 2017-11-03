@@ -1,4 +1,6 @@
 function g = makeGElength(g)
+% Input:
+%   g      [gx(:) gy(:)]
 % if length not divisible by 4, pad with zeroes at end
 
 if mod(length(g),4)
