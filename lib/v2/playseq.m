@@ -37,6 +37,6 @@ nt = size(d,1);
 
 for ii = 1:((1+nTRskip)*nModPerTR):nt
 	dispseq(ii,ii+nModPerTR-1,d);
-	title(num2str(ii));
+	subplot(511); title(num2str(ii));
 	pause(tpause);     % to allow display to refresh
 end
