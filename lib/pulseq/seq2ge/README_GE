@@ -1,0 +1,9 @@
+seq2ge:
+	From a .seq file, generate the following files:
+	.mod files:     one for each module
+	modules.txt:    list of .mod files
+	scanloop.txt:   defines pulse sequence (sequence of modules; waveform amplitudes; RF/ACQ phase; etc)
+
+Use playseq.m to simulate the GE sequence from modules.txt, scanloop.txt, and the .mod files.
+	
+Example: main.m

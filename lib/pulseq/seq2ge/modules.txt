@@ -1,0 +1,8 @@
+Total number of unique cores
+5
+wavfile_name    duration (us)     has_RF?     has_ADC?
+rf.mod	4016	1	0
+core2.mod	292	0	0
+core3.mod	3008	0	0
+readout.mod	3424	0	1
+core5.mod	86300	0	0
