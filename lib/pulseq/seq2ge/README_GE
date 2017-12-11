@@ -1,4 +1,4 @@
-seq2ge:
+seq2ge.m:
 	From a .seq file, generate the following files:
 	.mod files:     one for each module
 	modules.txt:    list of .mod files
