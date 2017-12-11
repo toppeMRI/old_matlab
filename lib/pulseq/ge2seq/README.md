@@ -1,7 +1,5 @@
-Aug 2017
+# TOPPE to Pulseq conversion
 
-ge2seq.m
-
-Convert TOPPE files to a Pulseq (.seq) file.
 Uses Pulseq Matlab library downloaded 8/24/17 as follows:
  $ git clone https://github.com/pulseq/pulseq/
+

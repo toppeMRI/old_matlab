@@ -1,9 +1,9 @@
-addpath ~/github/toppe/matlab/lib/v1
+%addpath ~/github/toppe/matlab/lib/v1
 
 % generate files for GE scanner
 seq2ge('external.seq');
 system('tar czf GEscan.tgz modules.txt scanloop.txt *.mod');
-%system('rm *.mod modules.txt scanloop.txt');
+system('rm *.mod modules.txt scanloop.txt');
 
 % simulate GE scan 
 system('tar xzf GEscan.tgz');
