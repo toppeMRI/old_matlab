@@ -109,10 +109,11 @@ for it = nstart:nstop
 		coredel = 0;
 	end
 
-	tmin = start_core + coredel + cores{ic}.wavdur + timetrwait + 8 + timessi;   % mimimum core duration. 8 is for wait pulse.
-	textra = max(cores{ic}.dur - tmin, 0);                                       % silence at end of core
+	tmin = start_core + coredel + cores{ic}.wavdur + timetrwait + timessi;   % mimimum core duration (us). 
+	textra = max(cores{ic}.dur - tmin, 0);                                   % silence at end of core
+	tminwait = 12;   % (us) min length of wait pulse.
 	if size(d,2)>13
-		textra = textra + d(it,14);
+		textra = textra + max(d(it,14),tminwait);    % waitcore duration (see toppev2.e)
 	end
 
 	waveform = d(it,16);
@@ -129,9 +130,9 @@ for it = nstart:nstop
 	
 	rho1 = [zeros(round((start_core+coredel)/dt),1); ia_rf/max_pg_iamp*cores{ic}.rho(:,waveform); zeros(round((timetrwait+timessi)/dt),1)];
 	th1  = [zeros(round((start_core+coredel)/dt),1); ia_th/max_pg_iamp*cores{ic}.th(:,waveform);  zeros(round((timetrwait+timessi)/dt),1)];
-	gx1  = [zeros(round((start_core)/dt),1);         ia_gx/max_pg_iamp*gxit(:);          zeros(round((timetrwait+timessi+coredel)/dt),1)];
-	gy1  = [zeros(round((start_core)/dt),1);         ia_gy/max_pg_iamp*gyit(:);          zeros(round((timetrwait+timessi+coredel)/dt),1)];
-	gz1  = [zeros(round((start_core)/dt),1);         ia_gz/max_pg_iamp*gzit(:);  zeros(round((timetrwait+timessi+coredel)/dt),1)];
+	gx1  = [zeros(round((start_core)/dt),1);         ia_gx/max_pg_iamp*gxit(:); zeros(round((timetrwait+timessi+coredel)/dt),1)];
+	gy1  = [zeros(round((start_core)/dt),1);         ia_gy/max_pg_iamp*gyit(:); zeros(round((timetrwait+timessi+coredel)/dt),1)];
+	gz1  = [zeros(round((start_core)/dt),1);         ia_gz/max_pg_iamp*gzit(:); zeros(round((timetrwait+timessi+coredel)/dt),1)];
 
 	rho = [rho; rho1; zeros(round(textra/dt),1)];
 	th  = [th;  th1;  zeros(round(textra/dt),1)];
