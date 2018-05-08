@@ -4,11 +4,28 @@ function seq2ge(seqfile)
 % Convert Pulseq .seq file to TOPPE files, for playing sequence on GE scanner.
 %
 % The TOPPE pulse sequence needs the following files:
-%   *.wav:        one .wav file corresponds to one "unique" block (see below)
-%   cores.txt:    list of .wav files, and flags indicating whether the .wav file is RF/ADC/(gradients only)
-%   scanloop.txt: sequence of instructions for the entire scan (waveform amplitudes, ADC instructions, etc)
+%   *.mod:          one .mod file corresponds to one "unique" block (see below)
+%   modules.txt:    list of .mod files, and flags indicating whether the .mod file is RF/ADC/(gradients only)
+%   scanloop.txt:   sequence of instructions for the entire scan (waveform amplitudes, ADC instructions, etc)
+
+% This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
-% $Id: seq2ge.m,v 1.41 2017/08/11 20:03:14 jfnielse Exp $
+% TOPPE is free software: you can redistribute it and/or modify
+% it under the terms of the GNU Library General Public License as published by
+% the Free Software Foundation version 2.0 of the License.
+%
+% TOPPE is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU Library General Public License for more details.
+%
+% You should have received a copy of the GNU Library General Public License
+% along with TOPPE. If not, see <http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html>.
+% 
+% (c) 2016 The Regents of the University of Michigan
+% Jon-Fredrik Nielsen, jfnielse@umich.edu
+%
+% $Id: loop2txt.m,v 1.1 2017/08/29 16:00:17 jfnielse Exp $
 
 dotroubleshoot = false;
 
@@ -24,7 +41,7 @@ if 1
 %
 % Find blocks that are unique in terms of waveforms and timing (i.e., waveform amplitudes, RF/ADC phase, etc can differ).
 % The resulting set of unique blocks will be referred to as "cores", to distinguish them from the blocks defined in the .seq file.
-% For each core, one *.wav file is generated.
+% For each core, one .mod file is generated.
 %
 %
 
@@ -305,9 +322,10 @@ for ic = 1:size(cores,1)
 	end
 	addrframp = false;
 	
-	mat2wav(abs(rf),angle(rf),gx,gy,gz,nomflip,fname,desc,hdrfloats,hdrints,addrframp);
+	%mat2wav(abs(rf),angle(rf),gx,gy,gz,nomflip,fname,desc,hdrfloats,hdrints,addrframp);
+	mat2mod(abs(rf),angle(rf),gx,gy,gz,nomflip,fname,desc,hdrfloats,hdrints,addrframp);
 
-	% write entry in cores.txt for this core
+	% write entry in modules.txt for this core
 	if isempty(core.delay)
 		duration = round(dt*numel(rf)*1e6); % us
 	else
@@ -324,7 +342,7 @@ fprintf(1, 'done.\n');
 
 %
 %
-% Write scanloop.txt, which specifices the scan sequence (along with modules.txt and the .wav files).
+% Write scanloop.txt, which specifices the scan sequence (along with modules.txt and the .mod files).
 %
 %
 
@@ -384,10 +402,31 @@ for ib = 1:size(seq.blockEvents,1)
 	dabslice = 0;
 	dabecho  = 0;
 
-	d = [d; ic ia_rf ia_th ia_gx ia_gy ia_gz dabslice dabecho dabview dabmode phi irfphase irfphase ];
+	textra = 0;   % us
+	freq = 0;     % Hz (RF offset frequency)
+   waveform = 1; % waveform index (number; usually 1) -- each .mod file can have multiple different waveforms (of equal length)
+	d = [d; ic ia_rf ia_th ia_gx ia_gy ia_gz dabslice dabecho dabview dabmode phi irfphase irfphase textra freq waveform];
 end
 
 % write matrix d to scanloop.txt
+loop2txt(d);
+
+return;
+
+
+function g = g2gcm(g)
+% convert gradient from Hz/cm to Gauss/cm
+
+gamma = 4.2576e7;   % Hz/T
+g = 1e2 * g / gamma;   % Gauss/cm
+
+return;
+
+
+
+
+%% OLD CODE %%
+
 nt = size(d,1);              % number of startseq() calls   
 NL = 13;   % toppe3.e 
 maxslice = max(d(:,7));
@@ -415,10 +454,3 @@ fprintf(1, 'done.\n');
 return;
 
 
-function g = g2gcm(g)
-% convert gradient from Hz/cm to Gauss/cm
-
-gamma = 4.2576e7;   % Hz/T
-g = 1e2 * g / gamma;   % Gauss/cm
-
-return;

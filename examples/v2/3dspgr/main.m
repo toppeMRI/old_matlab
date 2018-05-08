@@ -1,6 +1,8 @@
 writeloop;
 system('./tarit');
 
+return;
+
 % troubleshoot THETA channel
 [desc,rho,theta,gx,gy,gz,paramsint16,paramsfloat] = readmod('tipdown.mod');
 rho = real(rho.*exp(1i*theta));
