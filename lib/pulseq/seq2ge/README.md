@@ -15,7 +15,7 @@ From a .seq file, generate the following files:
 
 In Matlab, do
 ```
->> addpath ~/github/toppe/matlab/lib/v1    % edit accordingly
+>> addpath ../../v2   
 >> main;
 ```
 
