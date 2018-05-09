@@ -285,7 +285,7 @@ for ic = 1:size(cores,1)
 	if ~isempty(core.adc)
 		fname = 'readout.mod';
 	elseif ~isempty(core.rf)
-		fname = 'rf.mod';
+		fname = 'tipdown.mod';
 	else
 		fname = sprintf('core%d.mod', ic);
 	end
