@@ -10,15 +10,15 @@ function [dat, pfilesize] = loaddat_ge(fid,rdb_hdr,SLICES,ECHOES,VIEWS,doflip,CO
 %
 % INPUTS:
 %  fid:      Pfile id, e.g., created with 
-%              >> fid = fopen(pfile,'r','l');
+%               fid = fopen(pfile,'r','l');
 %  rdb_hdr:  Pfile header, created with
-%              >> fseek(fid,0,'bof');
-%              >> rdb_hdr = read_rdb_hdr(fid,rdbm_rev);   % the fMRI lab at UM is currently at rdbm_rev = 24
+%               fseek(fid,0,'bof');
+%               rdb_hdr = read_rdb_hdr(fid,rdbm_rev);   % the fMRI lab at UM is currently at rdbm_rev = 24
 %            To get the Pfile version, do:
-%              >> fseek(fid,0,'bof');
-%              >> ver = fread(fid,1,'float32');
-%              >> str = num2str(ver);
-%              >> rdbm_rev = str2double(str);
+%               fseek(fid,0,'bof');
+%               ver = fread(fid,1,'float32');
+%               str = num2str(ver);
+%               rdbm_rev = str2double(str);
 %  slice:    'slice' index (in loaddab), starting at 0
 %  echo:     'echo' index (in loaddab), starting at 0
 %  view:     'view' index (in loaddab), starting at 0
