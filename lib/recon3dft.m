@@ -57,7 +57,7 @@ end
 
 % recon 
 for coil = 1:size(d,4)
-	fprintf(1,'recon coil %d\n', coil);
+	fprintf(1,'\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\brecon coil %d', coil);
 	%imstmp = ift3(d(:,:,:,coil,echo));
 	imstmp = ift3(d(:,:,:,coil),dokzft);
 	imstmp = imstmp(end/2+((-nx/decimation/2):(nx/decimation/2-1))+1,:,:);               % [nx ny nz]
@@ -71,6 +71,8 @@ for coil = 1:size(d,4)
 	end
 	ims(:,:,:,coil) = imstmp;
 end
+
+fprintf('\n');
 
 % flip x
 %ims = flipdim(ims,1);
@@ -87,6 +89,28 @@ else
 	if dodisplay
 		%im(permute(imsos,[2,1,3]));
 		im(imsos);
+	end
+end
+return;
+
+function im = ift3(D,do3dfft)
+%
+%	function im = ift3(dat)
+%
+%	Centered inverse 3DFT of a 3D data matrix.
+% 
+% $Id: ift3.m,v 1.1 2017/08/02 21:14:20 jfnielse Exp $
+
+if ~exist('do3dfft','var')
+	do3dfft = true;
+end
+
+if do3dfft
+	im = fftshift(ifftn(fftshift(D)));
+else
+	% don't do fft in 3rd dimension
+	for k = 1:size(D,3)
+		im(:,:,k) = fftshift(ifftn(fftshift(D(:,:,k))));
 	end
 end
 

@@ -29,15 +29,21 @@ fseek(fid,0,'bof');                 % NB!
 rdb_hdr = read_rdb_hdr(fid,rdbm_rev);
 
 ndat    = rdb_hdr.frame_size;
-nslices = rdb_hdr.nslices
-nechoes = rdb_hdr.nechoes
-nviews  = rdb_hdr.nframes
-ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1
+nslices = rdb_hdr.nslices;
+nechoes = rdb_hdr.nechoes;
+nviews  = rdb_hdr.nframes;
+ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1;
+
+fprintf(1,'\nndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n', ndat, nslices, nechoes, nviews, ncoils);
 
 if exist('echo','var')
 	ECHOES = echo;
 else
 	ECHOES = 1:nechoes;
+end
+
+if max(ECHOES) > nechoes
+	error('max echo is %d', nechoes);
 end
 
 %dat = zeros([ndat ncoils nslices nechoes nviews]);
@@ -48,10 +54,11 @@ for slice = 2:nslices   % skip first slice (sometimes contains corrupted data)
 			[dattmp pfilesize] = loaddat_ge(fid,rdb_hdr,slice-1,echo-1,view);     % [ndat ncoils]. Skip baseline (0) view.
 			dat(:,:,slice-1,ie,view) = dattmp; 
 		end
+		fprintf(1,'%d  ',ftell(fid));
 	end
 end
 fclose(fid);
-fprintf(1,'Expected pfilesize = %d\n', pfilesize);
+fprintf(1,'\nExpected pfilesize = %d\n\n', pfilesize);
 return;
 
 % Average
