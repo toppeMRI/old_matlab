@@ -1,0 +1,7 @@
+Total number of unique cores
+4
+fname	duration(us)	hasRF?	hasDAQ?
+tag.mod	0	1	0
+control.mod	0	1	0
+tipdown.mod	0	1	0
+readout.mod	0	0	1

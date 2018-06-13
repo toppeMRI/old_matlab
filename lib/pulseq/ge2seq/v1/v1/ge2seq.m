@@ -87,7 +87,7 @@ for ii = 1:100
 
 	gx = makeArbitraryGrad('x',g2pulseq(gxwav,rasterTime));
 	gy = makeArbitraryGrad('y',g2pulseq(gywav,rasterTime));
-	gz = makeArbitraryGrad('z',g2pulseq(gzwav,rasterTime));   % divide gzwav by 2 in this example -- fix
+	gz = makeArbitraryGrad('z',g2pulseq(gzwav,rasterTime));
 
 	freqOffset  = d(ii,15);                         % Hz
 	phaseOffset = d(ii,12)/max_pg_iamp*pi;          % radians
