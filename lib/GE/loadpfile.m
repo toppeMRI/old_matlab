@@ -54,7 +54,7 @@ for slice = 2:nslices   % skip first slice (sometimes contains corrupted data)
 			[dattmp pfilesize] = loaddat_ge(fid,rdb_hdr,slice-1,echo-1,view);     % [ndat ncoils]. Skip baseline (0) view.
 			dat(:,:,slice-1,ie,view) = dattmp; 
 		end
-		fprintf(1,'%d  ',ftell(fid));
+		%fprintf(1,'%d  ',ftell(fid));
 	end
 end
 fclose(fid);
