@@ -134,6 +134,12 @@ for it = nstart:nstop
 	gy1  = [zeros(round((start_core)/dt),1);         ia_gy/max_pg_iamp*gyit(:); zeros(round((timetrwait+timessi+coredel)/dt),1)];
 	gz1  = [zeros(round((start_core)/dt),1);         ia_gz/max_pg_iamp*gzit(:); zeros(round((timetrwait+timessi+coredel)/dt),1)];
 
+	% apply RF phase offset
+	if cores{ic}.hasRF
+		th1 = th1 + d(it,12)/max_pg_iamp*pi;
+		th1 = angle(exp(1i*th1));   % wrap to [-pi pi] range
+	end
+
 	rho = [rho; rho1; zeros(round(textra/dt),1)];
 	th  = [th;  th1;  zeros(round(textra/dt),1)];
 	gx  = [gx;  gx1;  zeros(round(textra/dt),1)];
