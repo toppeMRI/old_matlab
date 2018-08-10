@@ -1,5 +1,5 @@
-function dat = loadpfile(pfile,echo)
-% function dat = loadpfile(pfile,[echo])
+function [dat, rdb_hdr] = loadpfile(pfile,echo)
+% function [dat, rdb_hdr] = loadpfile(pfile,[echo])
 %
 % Load data for one echo (or all) from Pfile, EXCEPT dabslice=0 slot (which can contain corrupt data).
 
@@ -23,7 +23,7 @@ function dat = loadpfile(pfile,echo)
 % read Pfile header
 fid = fopen(pfile,'r','l');
 ver = fread(fid,1,'float32');
-str = num2str(ver);
+str = num2str(ver)
 rdbm_rev = str2double(str);
 fseek(fid,0,'bof');                 % NB!
 rdb_hdr = read_rdb_hdr(fid,rdbm_rev);
