@@ -34,6 +34,8 @@ d = loadpfile(pfile,echo);   % int16. [ndat ncoils nslices nechoes nviews] = [nd
 d = permute(d,[1 5 3 2 4]);         % [ndat ny nz ncoils nechoes]
 d = double(d);
 
+d = flipdim(d,1);        % data is stored in reverse order for some reason
+
 %if(mod(size(d,3),2))
 %	d = d(:,:,2:end,:,:);  % throw away dabslice = 0
 %end
@@ -58,7 +60,6 @@ end
 % recon 
 for coil = 1:size(d,4)
 	fprintf(1,'\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\brecon coil %d', coil);
-	%imstmp = ift3(d(:,:,:,coil,echo));
 	imstmp = ift3(d(:,:,:,coil),dokzft);
 	imstmp = imstmp(end/2+((-nx/decimation/2):(nx/decimation/2-1))+1,:,:);               % [nx ny nz]
 	if zpad(1) > 1   % zero-pad (interpolate) in xy
@@ -74,7 +75,6 @@ end
 
 fprintf('\n');
 
-% flip x
 %ims = flipdim(ims,1);
 
 % display root sum-of-squares image
