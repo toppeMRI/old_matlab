@@ -1,11 +1,13 @@
 # TOPPE to Pulseq conversion
 
+(In development -- updated 4-Oct-2018)
+
 ### Run example
 
 In Matlab, do
 
 ```
->> addpath ~/github/toppe/matlab/lib/v1    % edit accordingly
+>> addpath ~/github/toppe/matlab/lib/v2    % edit accordingly
 >> ge2seq('modules.txt','scanloop.txt','timing.txt');
 ```
 
