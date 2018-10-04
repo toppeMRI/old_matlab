@@ -52,7 +52,7 @@ while true
             obj.blockEvents = readBlocks(fid);
         case '[RF]'
             obj.rfLibrary = readEvents(fid,1);
-        case '[GRAD]'
+        case '[GRADIENTS]'
             obj.gradLibrary = readEvents(fid,1,'g',obj.gradLibrary);
         case '[TRAP]'
             obj.gradLibrary = readEvents(fid,[1 1e-6 1e-6 1e-6],'t',obj.gradLibrary);

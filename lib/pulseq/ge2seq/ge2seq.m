@@ -1,18 +1,21 @@
-function ge2seq(modulesfile,scanloopfile,timingfile,debug)
-% function ge2seq(modulesfile,scanloopfile,timingfile,[debug])
+function seq = ge2seq(modulesfile,scanloopfile,timingfile,varargin)
+% function ge2seq(modulesfile,scanloopfile,timingfile)
 %
 % TOPPE to Pulseq file conversion.
 % Requires the Pulseq Matlab toolbox (http://pulseq.github.io/)
 %
 % Inputs:
-%  modulesfile       Text file listing all .mod files (modules.txt).
+%  modulesfile       Text file listing all .mod files (i.e., modules.txt).
 %                    The .mod files listed must exist in the Matlab working directory, i.e., 
 %                    the directory from which you call this function.
-%  scanloopfile      Text file specifying the MR experiment (scanloop.txt)
+%  scanloopfile      Text file specifying the MR scan loop (i.e., scanloop.txt)
 %  timingfile        Text file specifying low-level TOPPE timing parameters (timing.txt).
 %
 % Example:
 %  >> ge2seq('modules.txt','scanloop.txt','timing.txt')
+%
+% $Id: ge2seq.m,v 1.28 2018/10/04 17:18:38 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/pulseq/pulseq-master/matlab/ge2seq/ge2seq.m,v $
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -30,44 +33,46 @@ function ge2seq(modulesfile,scanloopfile,timingfile,debug)
 % 
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
-%
-% $Id: ge2seq.m,v 1.16 2017/09/15 19:53:29 jfnielse Exp $
 
-if ~exist('debug','var')
-	debug = false;
-end
+% defaults
+arg.debug = false;
+
+% Substitute varargin values as appropriate
+curdir = cd('/opt/matlab/toolbox/irt'); setup; cd(curdir);
+arg = vararg_pair(arg, varargin);      % requires MIRT
+
+debug = arg.debug;
 
 rasterTime = 4e-6;         % TOPPE raster time (for RF, gradients, and ADC)
 max_pg_iamp = 2^15-2;      % max TOPPE/GE "instruction amplitude" (signed short int)
 
 % get TOPPE timing CVs
-fid = fopen(timingfile, 'r', 'ieee-be');
-s = fgets(fid);  % skip line
-s = fscanf(fid, '%s ', 1);
+fid        = fopen(timingfile, 'r', 'ieee-be');
+s          = fgets(fid);  % skip line
+s          = fscanf(fid, '%s ', 1);
 start_core = fscanf(fid, '%d\n', 1);
-s = fscanf(fid, '%s ', 1);
-myrfdel = fscanf(fid, '%d\n', 1);
-s = fscanf(fid, '%s ', 1);
-daqdel = fscanf(fid, '%d\n', 1);
-s = fscanf(fid, '%s ', 1);
+s          = fscanf(fid, '%s ', 1);
+myrfdel    = fscanf(fid, '%d\n', 1);
+s          = fscanf(fid, '%s ', 1);
+daqdel     = fscanf(fid, '%d\n', 1);
+s          = fscanf(fid, '%s ', 1);
 timetrwait = fscanf(fid, '%d\n', 1);
-s = fscanf(fid, '%s ', 1);
-timessi = fscanf(fid, '%d\n', 1);
+s          = fscanf(fid, '%s ', 1);
+timessi    = fscanf(fid, '%d\n', 1);
 fclose(fid);
 TPARAMS = [start_core myrfdel daqdel timetrwait timessi];
 
 % Get module information.
-fid = fopen(modulesfile, 'r', 'ieee-be');
-s = fgets(fid);  % skip line
+fid      = fopen(modulesfile, 'r', 'ieee-be');
+s        = fgets(fid);  % skip line
 nmodules = fscanf(fid, '%d\n', 1);
-s = fgets(fid);  % skip line
-ishp = 1;  % index into shapeLibrary
+s        = fgets(fid);  % skip line
+
 for ii = 1:nmodules
 	modules{ii}.fname = fscanf(fid, '%s ', 1);
 	modules{ii}.dur = fscanf(fid, '%d ', 1);
 	modules{ii}.hasRF = fscanf(fid, '%d ', 1);
 	modules{ii}.hasDAQ = fscanf(fid, '%d\n', 1);
-	%[desc rho th gx gy gz]	= readmod(modules{ii}.fname,false);
 end
 fclose(fid);
 
@@ -76,27 +81,31 @@ seq=mr.Sequence();
 
 % Loop through scanloop.txt. Add each row as one Pulseq "block".
 d = readloop(scanloopfile);
-nt = size(d,1);    % number of startseq calls
-%for ii = 1:nt   %82
-for ii = 1:100
-	if ~mod(ii,2*round(nt/10/2))
+if (debug)
+	nt = 20;
+else
+	nt = size(d,1);    % number of startseq calls
+end
+for ii = 1:nt
+	if ~mod(ii,500)
 		fprintf('.');
 	end
-	% get waveforms and delay for one row (one startseq call)
-	[~,~,~,~,~,rho,th,gxwav,gywav,gzwav,delay] = scansim(ii,ii,d,TPARAMS,false);  % rf: Gauss; gradients: Gauss/cm; delay: microsec
 
-	gx = makeArbitraryGrad('x',g2pulseq(gxwav,rasterTime));
-	gy = makeArbitraryGrad('y',g2pulseq(gywav,rasterTime));
-	gz = makeArbitraryGrad('z',g2pulseq(gzwav,rasterTime));   % divide gzwav by 2 in this example -- fix
+	% get waveforms and delay for one row (one startseq call)
+	[~, ~, ~, ~, ~, rho, th, gxwav, gywav, gzwav, textra] = dispseq(ii,ii,d,TPARAMS,false);  % rf: Gauss; gradients: Gauss/cm; textra: microsec
+
+	gx = makeArbitraryGrad('x',g2pulseq(gxwav,rasterTime,seq));
+	gy = makeArbitraryGrad('y',g2pulseq(gywav,rasterTime,seq));
+	gz = makeArbitraryGrad('z',g2pulseq(gzwav,rasterTime,seq));
 
 	freqOffset  = d(ii,15);                         % Hz
-	phaseOffset = d(ii,12)/max_pg_iamp*pi;          % radians
 
 	module = modules{d(ii,1)};
 	
 	if module.hasRF
+		phaseOffset = d(ii,12)/max_pg_iamp*pi;          % radians
 		flip = d(ii,2)/max_pg_iamp*pi;
-		rf = makeArbitraryRf(rf2pulseq(rho.*exp(1i*th),rasterTime),flip);
+		rf = makeArbitraryRf(rf2pulseq(rho.*exp(1i*th),rasterTime,seq), flip, 'FreqOffset', freqOffset, 'PhaseOffset', phaseOffset);
 		seq.addBlock(rf,gx,gy,gz);
 		if debug
 			subplot(221); plot(abs(rf.signal),'r'); title(sprintf('max = %f', max(abs(rf.signal))));
@@ -105,8 +114,9 @@ for ii = 1:100
 			%subplot(222); plot(th);
 		end
 	elseif module.hasDAQ
+		phaseOffset = d(ii,13)/max_pg_iamp*pi;          % radians
 		adc = makeAdc(numel(gxwav),'Dwell',rasterTime,'delay',0,...
-							'freqOffset',freqOffset, 'phaseOffset',phaseOffset);
+				'freqOffset',freqOffset,'phaseOffset',phaseOffset);
 		seq.addBlock(gx,gy,gz,adc);
 	else
 		seq.addBlock(gx,gy,gz);
@@ -114,12 +124,12 @@ for ii = 1:100
 
 	if debug
 		subplot(2,2,[3 4]); plot(gx.waveform,'r'); hold on; plot(gy.waveform,'g'); plot(gz.waveform,'b'); hold off; title(sprintf('max = %f', max([gx.waveform gy.waveform gz.waveform])));
-		input('press any key to continue');
+		%input('press any key to continue');
 	end
 
 	% add delay block
-	if delay > 0
-		del = makeDelay(delay*1e-6); 
+	if textra > 0
+		del = makeDelay(textra*1e-6); 
 		seq.addBlock(del);
 	end
 	
@@ -127,27 +137,27 @@ end
 fprintf('\n');
 
 seq.plot();
-seq.write('test.seq');
+seq.write('out.seq');
 
 return;
 	
-function g = g2pulseq(g,rasterTime)
-% convert gradient Gauss/cm to Hz/cm, and interpolate to GradRasterTime
-gamma = 42.576e6;       % Hz/T
-g = 1e-2 * g * gamma;   % Gauss/cm
-GradRasterTime = 1e-5;  % Pulseq gradient raster time
+function g = g2pulseq(g,rasterTime,seq)
+% convert gradient from Gauss/cm to Hz/m, and interpolate to GradRasterTime
+gamma = 42.576e6;      % Hz/T
+g = g * gamma / 1.0e2;   % Hz/m
 n = numel(g);
-g = interp1(1:n,g,floor(GradRasterTime/rasterTime):GradRasterTime/rasterTime:n);
+gradRasterTime = seq.gradRasterTime;
+g = interp1(1:n,g,floor(gradRasterTime/rasterTime):gradRasterTime/rasterTime:n);
 return;
 
-function rf = rf2pulseq(rf,rasterTime)
-% convert rf units from Gauss to Hz, and interpolate to RfRasterTime
-gamma = 42.576e6;   % Hz/T
-rf = 1e-4*rf*gamma;
-RfRasterTime = 1e-6;    % Pulseq RF raster time
+function rf = rf2pulseq(rf,rasterTime,seq)
+% convert rf units from Gauss to Hz, and interpolate to rfRasterTime
+gamma = 4.2576e3;       % Hz/G
+rf = rf*gamma;          % Hz
 %L = 10; cutoff = 0.9;
-%rf = interp(rf,dt/RfRasterTime,L,cutoff);      % upsample from 4us to 1us
+%rf = interp(rf,dt/rfRasterTime,L,cutoff);      % upsample from 4us to 1us
 n = numel(rf);
-rf = interp1(1:n,rf,floor(RfRasterTime/rasterTime):RfRasterTime/rasterTime:(n-RfRasterTime/rasterTime),'linear','extrap');
+rfRasterTime = seq.rfRasterTime;
+rf = interp1(1:n,rf,floor(rfRasterTime/rasterTime):rfRasterTime/rasterTime:(n-rfRasterTime/rasterTime),'linear','extrap');
 return;
 
