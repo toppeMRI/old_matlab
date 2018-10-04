@@ -23,7 +23,8 @@ function [dat, rdb_hdr] = loadpfile(pfile,echo)
 % read Pfile header
 fid = fopen(pfile,'r','l');
 ver = fread(fid,1,'float32');
-str = num2str(ver)
+str = num2str(ver);
+fprintf('Pfile version is %s\n', str);
 rdbm_rev = str2double(str);
 fseek(fid,0,'bof');                 % NB!
 rdb_hdr = read_rdb_hdr(fid,rdbm_rev);
@@ -34,7 +35,7 @@ nechoes = rdb_hdr.nechoes;
 nviews  = rdb_hdr.nframes;
 ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1;
 
-fprintf(1,'\nndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n', ndat, nslices, nechoes, nviews, ncoils);
+fprintf(1,'ndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n', ndat, nslices, nechoes, nviews, ncoils);
 
 if exist('echo','var')
 	ECHOES = echo;
@@ -58,7 +59,7 @@ for slice = 2:nslices   % skip first slice (sometimes contains corrupted data)
 	end
 end
 fclose(fid);
-fprintf(1,'\nExpected pfilesize = %d\n\n', pfilesize);
+fprintf(1,'Expected pfilesize = %d\n', pfilesize);
 return;
 
 % Average
