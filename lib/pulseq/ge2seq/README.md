@@ -2,6 +2,9 @@
 
 (In development -- updated 4-Oct-2018)
 
+Note: edited 'read.m' method of Pulseq @Sequence object as follows:
+  "GRAD" => "GRADIENTS"
+
 ### Run example
 
 In Matlab, do
