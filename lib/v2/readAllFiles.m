@@ -1,23 +1,18 @@
-function [rho, th, gx, gy, gz, rho1, th1, gx1, gy1, gz1, textra] = dispseq(nstart, nstop, varargin)
-% function [rho, th, gx, gy, gz, rho1, th1, gx1, gy1, gz1, textra] = dispseq(nstart, nstop, varargin)
+function [looparr, mods, tparams] = readAllFiles(varargin)
+% function [looparr, mods, tparams] = readAllFiles(varargin)
 %
 % Display pulse sequence, as specified in modules.txt, scanloop.txt, and timing.txt
 %
-% Inputs:
-%   nstart,nstop       first and last startseq calls (as specified in scanloop.txt)
+% Input options:
 % Options:
-%   'looparr'          scan loop array (see readloop.m). Default: read from scanloopfile
 %   'scanloopfile'     default: 'scanloop.txt'
-%   'tparams'          [start_core myrfdel daqdel timetrwait timessi]. Default: get values from timingfile.
 %   'timingfile'       default: 'timing.txt'
-%   'mods'             Structure containing .mod file contents (see readModules.m). Default: get values from modulesfile.
 %   'modulesfile'      default: 'modules.txt'
-%   'dodisplay'        true (default) or false
 %
 % Outputs:
-%   rho                Gauss
-%   th                 radians, [-pi pi]
-%   gx,gy,gz           Gauss/cm
+%   looparr            [nt 16] array containing scan loop parameters (see readloop.m)
+%   mods               struct containing .mod file contents (see readModules.m)
+%   tparams            [1 5] array containing low-level sequence timing parameters (see readTimingFile.m)
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -33,49 +28,29 @@ function [rho, th, gx, gy, gz, rho1, th1, gx1, gy1, gz1, textra] = dispseq(nstar
 % You should have received a copy of the GNU Library General Public License
 % along with TOPPE. If not, see <http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html>.
 % 
-% (c) 2016-2018 The Regents of the University of Michigan
+% (c) 2018 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: dispseq.m,v 1.5 2018/10/08 14:14:01 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/dispseq.m,v $
+% $Id: readAllFiles.m,v 1.1 2018/10/08 14:14:01 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readAllFiles.m,v $
 
 %% parse inputs
 
 % Default values 
-arg.looparr = [];
 arg.scanloopfile = 'scanloop.txt';
-arg.tparams = [];
 arg.timingfile = 'timing.txt';
-arg.mods = [];
 arg.modulesfile = 'modules.txt';
-arg.dodisplay = true;
 
 % Substitute varargin values as appropriate
 arg = vararg_pair(arg, varargin);
 
-%% read scan files as needed
+looparr = tryread(@readloop, arg.scanloopfile);
 
-% read scanloop
-if isempty(arg.looparr)
-	looparr = tryread(@readloop, arg.scanloopfile);
-else
-	looparr = arg.looparr;
-end
-
-% get timing CVs
-if isempty(arg.tparams)
-	TPARAMS = tryread(@readTimingFile, arg.timingfile);
-else
-	TPARAMS = arg.tparams;
-end
-[start_core myrfdel daqdel timetrwait timessi] = deal(TPARAMS(1), TPARAMS(2), TPARAMS(3), TPARAMS(4), TPARAMS(5));
+% low-level timing CVs
+TPARAMS = tryread(@readTimingFile, arg.timingfile);
 
 % read module waveforms
-if isempty(arg.mods)
-	cores = tryread(@readModules, arg.modulesfile);
-else
-	cores = arg.mods;
-end
+mods = tryread(@readModules, arg.modulesfile);
 
 % build sequence. each sample is 4us.
 rho = []; th = []; gx = []; gy = []; gz = [];

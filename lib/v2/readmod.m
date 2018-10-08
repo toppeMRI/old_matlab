@@ -17,6 +17,9 @@ function [desc,rho,theta,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname,showi
 % 
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
+%
+% $Id: readmod.m,v 1.1 2018/10/08 12:48:58 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readmod.m,v $
 
 if ~exist('showinfo','var')
 	showinfo = true;

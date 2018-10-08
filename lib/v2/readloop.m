@@ -1,6 +1,9 @@
 function d = readloop(loopfile)
-% function d = readloop(loopfile)
+% function d = readloop([loopfile])
 % read scanloop.txt (toppe.e scan loop definition, used with modules.txt).
+%
+% Input:
+%    loopfile       default: 'scanloop.txt'
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -19,7 +22,12 @@ function d = readloop(loopfile)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: readloop.m,v 1.1 2017/08/29 16:00:17 jfnielse Exp $
+% $Id: readloop.m,v 1.2 2018/10/08 12:56:19 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readloop.m,v $
+
+if ~exist('loopfile', 'var')
+	loopfile = 'scanloop.txt';
+end
 
 %NL = 11;   % toppe2
 %NL = 10;   % toppe.e and toppe_so.e
