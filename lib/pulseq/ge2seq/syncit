@@ -1,0 +1,1 @@
+rsync -avz ~jfnielse/projects/pulseq/pulseq-master/matlab/ge2seq/*.m .

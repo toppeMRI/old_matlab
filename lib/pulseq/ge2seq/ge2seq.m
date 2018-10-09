@@ -1,20 +1,22 @@
-function seq = ge2seq(modulesfile,scanloopfile,timingfile,varargin)
+function seq = ge2seq(varargin)
 % function ge2seq(modulesfile,scanloopfile,timingfile)
 %
 % TOPPE to Pulseq file conversion.
 % Requires the Pulseq Matlab toolbox (http://pulseq.github.io/)
 %
-% Inputs:
-%  modulesfile       Text file listing all .mod files (i.e., modules.txt).
+% Current verion: use matlab/lib/v2b/ functions (readmod.m, etc)
+%
+% Input options:
+%  modulesfile       Text file listing all .mod files. Default: 'modules.txt'.
 %                    The .mod files listed must exist in the Matlab working directory, i.e., 
 %                    the directory from which you call this function.
-%  scanloopfile      Text file specifying the MR scan loop (i.e., scanloop.txt)
-%  timingfile        Text file specifying low-level TOPPE timing parameters (timing.txt).
+%  scanloopfile      Text file specifying the MR scan loop. Default: 'scanloop.txt'
+%  timingfile        Text file specifying low-level TOPPE timing parameters. Default: 'timing.txt'.
 %
 % Example:
-%  >> ge2seq('modules.txt','scanloop.txt','timing.txt')
+%  >> ge2seq('scanloopfile', 'myloop.txt');
 %
-% $Id: ge2seq.m,v 1.28 2018/10/04 17:18:38 jfnielse Exp $
+% $Id: ge2seq.m,v 1.34 2018/10/09 22:23:37 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/pulseq/pulseq-master/matlab/ge2seq/ge2seq.m,v $
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
@@ -36,10 +38,12 @@ function seq = ge2seq(modulesfile,scanloopfile,timingfile,varargin)
 
 % defaults
 arg.debug = false;
+arg.modulesfile  = 'modules.txt';
+arg.scanloopfile = 'scanloop.txt';
+arg.timingfile   = 'timing.txt';
 
 % Substitute varargin values as appropriate
-curdir = cd('/opt/matlab/toolbox/irt'); setup; cd(curdir);
-arg = vararg_pair(arg, varargin);      % requires MIRT
+arg = vararg_pair(arg, varargin);
 
 debug = arg.debug;
 
@@ -47,7 +51,7 @@ rasterTime = 4e-6;         % TOPPE raster time (for RF, gradients, and ADC)
 max_pg_iamp = 2^15-2;      % max TOPPE/GE "instruction amplitude" (signed short int)
 
 % get TOPPE timing CVs
-fid        = fopen(timingfile, 'r', 'ieee-be');
+fid        = fopen(arg.timingfile, 'r', 'ieee-be');
 s          = fgets(fid);  % skip line
 s          = fscanf(fid, '%s ', 1);
 start_core = fscanf(fid, '%d\n', 1);
@@ -63,7 +67,7 @@ fclose(fid);
 TPARAMS = [start_core myrfdel daqdel timetrwait timessi];
 
 % Get module information.
-fid      = fopen(modulesfile, 'r', 'ieee-be');
+fid      = fopen(arg.modulesfile, 'r', 'ieee-be');
 s        = fgets(fid);  % skip line
 nmodules = fscanf(fid, '%d\n', 1);
 s        = fgets(fid);  % skip line
@@ -79,20 +83,23 @@ fclose(fid);
 % initialize Pulseq sequence object
 seq=mr.Sequence();
 
+% load scan loop and modules
+d = tryread(@readloop, arg.scanloopfile);
+cores = tryread(@readModules, arg.modulesfile);
+
 % Loop through scanloop.txt. Add each row as one Pulseq "block".
-d = readloop(scanloopfile);
 if (debug)
 	nt = 20;
 else
 	nt = size(d,1);    % number of startseq calls
 end
 for ii = 1:nt
-	if ~mod(ii,500)
+	if ~mod(ii,250)
 		fprintf('.');
 	end
 
 	% get waveforms and delay for one row (one startseq call)
-	[~, ~, ~, ~, ~, rho, th, gxwav, gywav, gzwav, textra] = dispseq(ii,ii,d,TPARAMS,false);  % rf: Gauss; gradients: Gauss/cm; textra: microsec
+	[~, ~, ~, ~, rf, gxwav, gywav, gzwav, tdelay] = dispseq(ii,ii,'looparr',d,'tparams',TPARAMS,'mods',cores,'dodisplay',false);  % rf: Gauss; gradients: Gauss/cm; tdelay: microsec
 
 	gx = makeArbitraryGrad('x',g2pulseq(gxwav,rasterTime,seq));
 	gy = makeArbitraryGrad('y',g2pulseq(gywav,rasterTime,seq));
@@ -105,13 +112,11 @@ for ii = 1:nt
 	if module.hasRF
 		phaseOffset = d(ii,12)/max_pg_iamp*pi;          % radians
 		flip = d(ii,2)/max_pg_iamp*pi;
-		rf = makeArbitraryRf(rf2pulseq(rho.*exp(1i*th),rasterTime,seq), flip, 'FreqOffset', freqOffset, 'PhaseOffset', phaseOffset);
+		rf = makeArbitraryRf(rf2pulseq(rf,rasterTime,seq), flip, 'FreqOffset', freqOffset, 'PhaseOffset', phaseOffset);
 		seq.addBlock(rf,gx,gy,gz);
 		if debug
 			subplot(221); plot(abs(rf.signal),'r'); title(sprintf('max = %f', max(abs(rf.signal))));
 			subplot(222); plot(angle(rf.signal),'r');  title(sprintf('max = %f', max(angle(rf.signal))));
-			%subplot(221); plot(rho,'r');
-			%subplot(222); plot(th);
 		end
 	elseif module.hasDAQ
 		phaseOffset = d(ii,13)/max_pg_iamp*pi;          % radians
@@ -128,8 +133,8 @@ for ii = 1:nt
 	end
 
 	% add delay block
-	if textra > 0
-		del = makeDelay(textra*1e-6); 
+	if tdelay > 0
+		del = makeDelay(tdelay*1e-6); 
 		seq.addBlock(del);
 	end
 	
