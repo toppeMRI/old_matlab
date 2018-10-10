@@ -13,10 +13,11 @@ function seq = ge2seq(varargin)
 %  scanloopfile      Text file specifying the MR scan loop. Default: 'scanloop.txt'
 %  timingfile        Text file specifying low-level TOPPE timing parameters. Default: 'timing.txt'.
 %
-% Example:
+% Examples:
+%  >> ge2seq();
 %  >> ge2seq('scanloopfile', 'myloop.txt');
 %
-% $Id: ge2seq.m,v 1.34 2018/10/09 22:23:37 jfnielse Exp $
+% $Id: ge2seq.m,v 1.35 2018/10/10 12:49:12 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/pulseq/pulseq-master/matlab/ge2seq/ge2seq.m,v $
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
