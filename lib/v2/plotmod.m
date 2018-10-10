@@ -18,28 +18,21 @@ function plotmod(fname)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 
-[desc,rho,theta,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname);
-b1 = rho.*exp(i*theta);
+[desc,b1,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname);
+rho = abs(b1);
+theta = angle(b1);
 
-ncoils = size(b1,2);
+nwavs = size(b1,2);    % number of waveforms on each axis
 nt = size(b1,1);
 dt = 4e-3;  % ms
 T = linspace(dt/2,nt*dt-dt/2,nt);
 
-cols = 'bbbbbbbb';
-
 figure;
-for c = 1:ncoils
-	subplot(2,ncoils,c);        plot(T,rho(:,c),cols(c));   ylabel(['coil ' num2str(c) ', rho (Gauss)']);
-	xlabel('time (msec)');
-	subplot(2,ncoils,c+ncoils); plot(T,theta(:,c),cols(c)); ylabel(['coil ' num2str(c) ', theta (rad)']);
-	xlabel('time (msec)');
-end
-
-figure;
-subplot(311); plot(T,gx); ylabel('gx (G/cm)');
-subplot(312); plot(T,gy); ylabel('gy (G/cm)');
-subplot(313); plot(T,gz); ylabel('gz (G/cm)');
+subplot(324); plot(T,rho);   ylabel('abs(rf)    G');
+subplot(325); plot(T,theta); ylabel('angle(rf)  rad');
+subplot(321); plot(T,gx);    ylabel('gx         G/cm');
+subplot(322); plot(T,gy);    ylabel('gy         G/cm');
+subplot(323); plot(T,gz);    ylabel('gz         G/cm');
 xlabel('time (msec)');
 
 return;
