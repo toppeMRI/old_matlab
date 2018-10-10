@@ -18,9 +18,7 @@ function plotmod(fname)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 
-[desc,b1,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname);
-rho = abs(b1);
-theta = angle(b1);
+[desc,rho,theta,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname);
 
 nwavs = size(b1,2);    % number of waveforms on each axis
 nt = size(b1,1);
