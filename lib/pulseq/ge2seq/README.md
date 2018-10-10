@@ -1,6 +1,6 @@
 # TOPPE to Pulseq conversion
 
-(In development -- updated 4-Oct-2018)
+(In development -- updated Oct-2018)
 
 Note: edited 'read.m' method of Pulseq @Sequence object as follows:
   "GRAD" => "GRADIENTS"
@@ -10,8 +10,8 @@ Note: edited 'read.m' method of Pulseq @Sequence object as follows:
 In Matlab, do
 
 ```
->> addpath ~/github/toppe/matlab/lib/v2    % edit accordingly
->> ge2seq('modules.txt','scanloop.txt','timing.txt');
+>> ge2seq();
+>> ge2seq('modulesfile','mymodules.txt');
 ```
 
 Uses Pulseq Matlab library downloaded 8/24/17 as follows:
