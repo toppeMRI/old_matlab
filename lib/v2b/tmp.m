@@ -1,26 +1,23 @@
-function [rf, gx, gy, gz, rf1, gx1, gy1, gz1, tdelay] = dispseq(nstart, nstop, varargin)
-% function [rf, gx, gy, gz, rf1, gx1, gy1, gz1, tdelay] = dispseq(nstart, nstop, varargin)
+function [rf, gx, gy, gz, tpad] = dispseq(nstart, nstop, varargin)
+% function [rho, th, gx, gy, gz, rho1, th1, gx1, gy1, gz1, textra] = dispseq(nstart, nstop, varargin)
 %
 % Display pulse sequence, as specified in modules.txt, scanloop.txt, and timing.txt
 %
 % Inputs:
-%   nstart,nstop     first and last startseq calls (as specified in scanloop.txt)
+%   nstart,nstop       first and last startseq calls (as specified in scanloop.txt)
 % Options:
-%   'looparr'        scan loop array (see readloop.m). Default: read from scanloopfile
-%   'scanloopfile'   default: 'scanloop.txt'
-%   'tparams'        [start_core myrfdel daqdel timetrwait timessi]. Default: get values from timingfile.
-%   'timingfile'     default: 'timing.txt'
-%   'mods'           Structure containing .mod file contents (see readModules.m). Default: get values from modulesfile.
-%   'modulesfile'    default: 'modules.txt'
-%   'dodisplay'      true (default) or false
+%   'looparr'          scan loop array (see readloop.m). Default: read from scanloopfile
+%   'scanloopfile'     default: 'scanloop.txt'
+%   'tparams'          [start_core myrfdel daqdel timetrwait timessi]. Default: get values from timingfile.
+%   'timingfile'       default: 'timing.txt'
+%   'mods'             Structure containing .mod file contents (see readModules.m). Default: get values from modulesfile.
+%   'modulesfile'      default: 'modules.txt'
+%   'dodisplay'        true (default) or false
 %
 % Outputs:
-%   rf               Complex RF waveform (Gauss)
-%   gx,gy,gz         Gauss/cm
-%   rf1/gx1/...      Values from most recent startseq() call (used in, e.g., ge2seq.m)
-%   tdelay           Delay after end of module waveform. 
-%                    Determined by duration in modules.txt AND by textra (column 14) in scanloop.txt   
-%                    Used in ge2seq.m to set delay block.
+%   rho                Gauss
+%   th                 radians, [-pi pi]
+%   gx,gy,gz           Gauss/cm
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -39,7 +36,7 @@ function [rf, gx, gy, gz, rf1, gx1, gy1, gz1, tdelay] = dispseq(nstart, nstop, v
 % (c) 2016-2018 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: dispseq.m,v 1.9 2018/10/09 18:54:41 jfnielse Exp $
+% $Id: dispseq.m,v 1.6 2018/10/09 15:22:34 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/dispseq.m,v $
 
 %% parse inputs
@@ -105,10 +102,11 @@ for it = nstart:nstop
 	end
 
 	tmin = start_core + coredel + cores{ic}.wavdur + timetrwait + timessi;   % mimimum core duration (us). 
-	tdelay = max(cores{ic}.dur - tmin, 0);                                   % silence at end of core
+	tpad = max(cores{ic}.dur - tmin, 0);                                   % silence at end of core
 	tminwait = 12;   % (us) min length of wait pulse.
 	if size(looparr,2)>13
-		tdelay = tdelay + max(looparr(it,14),tminwait);    % waitcore duration (see toppev2.e)
+		textra = looparr(it,14);
+		tpad = tpad + max(textra, tminwait);    % waitcore duration (see toppev2.e)
 	end
 
 	waveform = looparr(it,16);
@@ -135,17 +133,14 @@ for it = nstart:nstop
 		th1 = angle(exp(1i*th1));   % wrap to [-pi pi] range
 	end
 
-	rho = [rho; rho1; zeros(round(tdelay/dt),1)];
-	th  = [th;  th1;  zeros(round(tdelay/dt),1)];
-	gx  = [gx;  gx1;  zeros(round(tdelay/dt),1)];
-	gy  = [gy;  gy1;  zeros(round(tdelay/dt),1)];
-	gz  = [gz;  gz1;  zeros(round(tdelay/dt),1)];
+	rho = [rho; rho1; zeros(round(tpad/dt),1)];
+	th  = [th;  th1;  zeros(round(tpad/dt),1)];
+	gx  = [gx;  gx1;  zeros(round(tpad/dt),1)];
+	gy  = [gy;  gy1;  zeros(round(tpad/dt),1)];
+	gz  = [gz;  gz1;  zeros(round(tpad/dt),1)];
 
 	%fprintf(1, 'it %d: tmin = %.3f ms, rf t = %.3f ms, grad t = %.3f ms\n', it, tmin/1000, numel(rho)*dt*1e-3, numel(gx)*dt*1e-3);
 end
-
-rf = rho.*exp(1i*th);
-rf1 = rho1.*exp(1i*th1);     % waveforms in last module, without the delay after it (if any)
 
 % plot
 if arg.dodisplay

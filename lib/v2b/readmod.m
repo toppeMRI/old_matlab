@@ -1,5 +1,5 @@
 function [desc,rf,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname,showinfo)
-% function [desc,rho,theta,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname, [showinfo])
+% function [desc,rf,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname,showinfo)
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -18,7 +18,7 @@ function [desc,rf,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname,showinfo)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: readmod.m,v 1.3 2018/10/09 14:45:34 jfnielse Exp $
+% $Id: readmod.m,v 1.4 2018/10/10 17:48:03 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readmod.m,v $
 
 if ~exist('showinfo','var')
