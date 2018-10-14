@@ -1,5 +1,7 @@
 # Matlab scripts for TOPPE v2
 
+Deprecated. Use ../v2b/ instead.
+
 Changes/fixes from toppev1:
 
  * Fixed theta waveform playback bug (especially important for, e.g., tailored RF pulses or high time-bandwidth SLR pulses)

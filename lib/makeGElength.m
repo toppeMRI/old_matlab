@@ -1,4 +1,4 @@
-function g = makeevenlength(g)
+function g = makeGElength(g)
 % if length not divisible by 4, pad with zeroes at end
 
 if mod(length(g),4)

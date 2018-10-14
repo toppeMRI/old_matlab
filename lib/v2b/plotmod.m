@@ -22,17 +22,26 @@ function plotmod(fname)
 rho = abs(b1);
 theta = angle(b1);
 
-nwavs = size(b1,2);    % number of waveforms on each axis
 nt = size(b1,1);
 dt = 4e-3;  % ms
 T = linspace(dt/2,nt*dt-dt/2,nt);
 
-figure;
-subplot(324); plot(T,rho);   ylabel('abs(rf)    G');
-subplot(325); plot(T,theta); ylabel('angle(rf)  rad');
-subplot(321); plot(T,gx);    ylabel('gx         G/cm');
-subplot(322); plot(T,gy);    ylabel('gy         G/cm');
-subplot(323); plot(T,gz);    ylabel('gz         G/cm');
+%figure
+% rf
+subplot(337); plot(T,rho);   ylabel('abs(rf) G');
+xlabel('time (msec)');
+subplot(338); plot(T,theta); ylabel('angle(rf) rad');
+xlabel('time (msec)');
+
+% gradient waveform
+subplot(331); plot(T,gx);    ylabel('gx G/cm');
+subplot(332); plot(T,gy);    ylabel('gy G/cm');
+subplot(333); plot(T,gz);    ylabel('gz G/cm');
+
+% gradient slew
+subplot(334); plot(T(2:end),diff(gx)/dt);  ylabel('gx slew    G/cm/ms');
+subplot(335); plot(T(2:end),diff(gy)/dt);  ylabel('gy slew    G/cm/ms');
+subplot(336); plot(T(2:end),diff(gz)/dt);  ylabel('gz slew    G/cm/ms');
 xlabel('time (msec)');
 
 return;

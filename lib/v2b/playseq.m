@@ -1,5 +1,5 @@
 function playseq(nModPerTR,varargin)
-% function playseq(loopfile,nModPerTR,varargin)
+% function playseq(nModPerTR,varargin)
 %
 % Loop through a scanloop.txt file ("play" sequence)
 %
@@ -29,13 +29,10 @@ function playseq(nModPerTR,varargin)
 % (c) 2016-18 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: playseq.m,v 1.4 2018/10/09 15:35:35 jfnielse Exp $
+% $Id: playseq.m,v 1.2 2018/10/10 18:25:34 jfnielse Exp $
 
-if nargin < 2
-	error('nModPerTR must be specified');
-end
 if nargin < 1
-	error('Scan loop file and nModPerTR must be specified');
+	error('nModPerTR must be specified');
 end
 
 %% parse inputs

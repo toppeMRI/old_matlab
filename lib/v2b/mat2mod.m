@@ -2,27 +2,37 @@ function mat2mod(varargin)
 % function mat2mod(varargin)
 %
 % Write waveforms to .mod file, use with toppev2 psd on GE scanners.
+% Assumes raster time (sample duration) of 4e-6 sec for all waveforms.
 %
-% Example:
+% Examples:
 % >> mat2mod('rf', rho.*exp(1i*theta), 'gz', gzwaveform, 'nomflip', 30);
-% >> mat2mod('gz', gzwaveform, 'desc', 'spoiler gradient');
+% >> mat2mod('gz', gzwaveform, 'desc', 'my spoiler gradient');
+% >> lims = {'MaxGrad', 50,  'GradUnit', 'mT/m', ...
+%            'MaxSlew', 200, 'SlewUnit', 'T/m/s'};
+% >> mat2mod('rf, myrf, 'gx', gzwav, 'system', lims);
 %
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
 % Input options:
-%   rf        -- Complex RF waveform, Gauss [ndat nrfpulses].
-%   theta     -- [-pi, pi] radians. Must be the same size as rho.
-%   gx        -- Gauss/cm, size [ndat ngxpulses]
-%   gy        -- Gauss/cm, size [ndat ngypulses]
-%   gz        -- Gauss/cm, size [ndat ngzpulses]
-%   ofname    -- output filename.
-%   desc      -- text string (ASCII) descriptor.
-%   nomflip   -- Excitation flip angle (degrees). Default: 90.
-%   hdrfloats -- additional floats to put in header (max 12) (starting at paramsfloat[20])
-%   hdrints   -- additional ints to put in header (max 30) (starting at paramsint16[3])
+%   rf            Complex RF waveform, [ndat nrfpulses]
+%   gx            [ndat ngxpulses]
+%   gy            [ndat ngypulses]
+%   gz            [ndat ngzpulses]
+%   rfUnit        'Gauss' (default) or 'mT'
+%   gradUnit      'Gauss/cm' (default) or 'mT/m'
+%   ofname        Output filename.
+%   desc          Text string (ASCII) descriptor.
+%   nomflip       Excitation flip angle (degrees). Default: 90.
+%   hdrfloats     Additional floats to put in header (max 12)
+%   hdrints       Additional ints to put in header (max 30)
+%   system        Cell array specifying hardware system limits (per manufacturer specification).
+%                 Default:
+%                 system = {'MaxGrad', 50,  'GradUnit', 'mT/m', ...
+%                           'MaxSlew', 200, 'SlewUnit', 'T/m/s', ...
+%                           'MaxRf',   20,  'RfUnit',   'mT'};  
 %
-% $Id: mat2mod.m,v 1.8 2018/10/09 15:15:11 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/mat2mod.m,v $
+% $Id: mat2mod.m,v 1.4 2018/10/14 14:54:16 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2b/mat2mod.m,v $
 
 % TOPPE is free software: you can redistribute it and/or modify
 % it under the terms of the GNU Library General Public License as published by
@@ -40,22 +50,34 @@ function mat2mod(varargin)
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 
 %% parse inputs
-% Default values 
+% Defaults
 arg.rf = [];
 arg.gx = [];
 arg.gy = [];
 arg.gz = [];
-arg.ofname = 'out.mod'; 
-arg.desc = 'TOPPE module';
-arg.nomflip = 90;
+arg.rfUnit    = 'Gauss';
+arg.gradUnit  = 'Gauss/cm';
+arg.ofname    = 'out.mod'; 
+arg.desc      = 'TOPPE module';
+arg.nomflip   = 90;
 arg.hdrfloats = [];
-arg.hdrints = [];
-arg.addrframp = false;
-arg.gsliceselect = 1;
+arg.hdrints   = [];
+arg.system    = [];
 
-% Substitute varargin values as appropriate
 arg = vararg_pair(arg, varargin);
 
+% parse system hardware limits
+% First, define defaults.
+system.MaxGrad  = 50;
+system.GradUnit = 'mT/m';
+system.MaxSlew  = 200;
+system.SlewUnit = 'T/m/s';
+system.MaxRf    = 20;
+system.RfUnit   = 'mT';
+if ~isempty(arg.system)
+	% Substitute specified system values as appropriate
+	system = vararg_pair(system, arg.system);
+end
 
 %% Copy input waveform to rf, gx, gy, and gz (so we don't have to carry the arg. prefix around)
 fields = {'rf' 'gx' 'gy' 'gz'};
@@ -65,7 +87,18 @@ for ii = 1:length(fields)
 	eval(cmd);
 end
 
-%% Force all waveforms to have the same dimensions (required by toppev2.e)
+%% Convert to Gauss and Gauss/cm
+if strcmp(arg.rfUnit, 'mT')
+	rf = rf/100;   % Gauss
+end
+if strcmp(arg.gradUnit, 'mT/m')
+	gx = gx/10;    % Gauss/cm
+	gy = gy/10;
+	gz = gz/10;
+end
+
+
+%% Force all waveform arrays to have the same dimensions (required by toppev2.e)
 ndat    = max( [size(rf,1) size(gx,1) size(gy,1) size(gz,1)] );
 npulses = max( [size(rf,2) size(gx,2) size(gy,2) size(gz,2)] );
 if ~ndat 
@@ -103,11 +136,56 @@ for ii = 1:length(fields)
 	eval (cmd);
 end
 
-% Fixes to avoid issues
+%% Check against system hardware limits
+if strcmp(system.RfUnit, 'mT')
+	system.MaxRf = system.MaxRf/100;      % Gauss
+end
+if strcmp(system.GradUnit, 'mT/m')
+	system.MaxGrad = system.MaxGrad/10;   % Gauss/cm
+end
+if strcmp(system.SlewUnit, 'T/m/s')
+	system.MaxSlew = system.MaxSlew/10;   % Gauss/cm/msec
+end
+
+systemViolation = false;
+
+maxG = max([abs(gx(:)) abs(gy(:)) abs(gz(:))]);
+grads = 'xyz';
+for ii = 1:3
+	if maxG(ii) > system.MaxGrad
+		fprintf('Error: %s gradient amplitude exceeds system limit (%.1f%%)\n', grads(ii), maxG(ii)/system.MaxGrad*100);
+		systemViolation = true;
+	end
+end
+
+rasterTime = 4e-3;
+gslew = diff([gx gy gz]/rasterTime,1);
+maxslew = max(gslew);
+grads = 'xyz';
+for ii = 1:3
+	if maxslew(ii) > system.MaxSlew
+		fprintf('Error: %s gradient slew rate exceeds system limit (%.1f%%)\n', grads(ii), maxslew(ii)/system.MaxSlew*100);
+		systemViolation = true;
+	end
+end
+
+maxRf = max(rf);
+if maxRf > system.MaxRf
+	fprintf('Error: rf amplitude exceeds system limit (%.1f%%)\n', maxRf/system.MaxRf*100);
+	systemViolation = true;
+end
+
+if systemViolation
+	error('Errors found -- exiting');
+end
+	
+
+% Fixes to avoid idiosyncratic issues on scanner
 %[rho,theta,gx,gy,gz] = sub_prepare_for_modfile(rho,theta,gx,gy,gz,addrframp);
 
-%% File header info
-[paramsfloat] = sub_myrfstat(abs(rf(:,1,1)), arg.nomflip, arg.gsliceselect);
+%% Optional header arrays
+gsliceselect = 1;  % legacy dummy value, ignore
+[paramsfloat] = sub_myrfstat(abs(rf(:,1,1)), arg.nomflip, gsliceselect);
 if ~isempty(arg.hdrfloats)
 	paramsfloat(20:(19+length(arg.hdrfloats))) = arg.hdrfloats;  % populate header with custom floats 
 end
@@ -121,8 +199,6 @@ arg.desc = sprintf('Filename: %s\n%s', arg.ofname, arg.desc);
 sub_writemod(arg.ofname, arg.desc, rf, gx, gy, gz, paramsint16, paramsfloat);
 
 return;
-
-
 
 
 
@@ -286,8 +362,6 @@ end
 fclose(fid);
 
 return;
-
-
 
 
 

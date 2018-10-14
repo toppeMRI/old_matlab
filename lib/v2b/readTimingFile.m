@@ -24,8 +24,8 @@ function TPARAMS = readTimingFile(timingfile)
 % (c) 2016-2018 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: readTimingFile.m,v 1.2 2018/10/08 13:49:27 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readTimingFile.m,v $
+% $Id: readTimingFile.m,v 1.1 2018/10/10 18:07:11 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2b/readTimingFile.m,v $
 
 if ~exist('timingfile', 'var')
 	timingfile = 'timing.txt';

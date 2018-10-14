@@ -39,8 +39,8 @@ function [rf, gx, gy, gz, rf1, gx1, gy1, gz1, tdelay] = dispseq(nstart, nstop, v
 % (c) 2016-2018 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: dispseq.m,v 1.9 2018/10/09 18:54:41 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/dispseq.m,v $
+% $Id: dispseq.m,v 1.1 2018/10/10 18:07:10 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2b/dispseq.m,v $
 
 %% parse inputs
 

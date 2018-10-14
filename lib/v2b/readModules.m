@@ -1,8 +1,8 @@
 function mods = readModules(modulesfile)
 % function mods = readModules(modulesfile)
 %
-% $Id: readModules.m,v 1.2 2018/10/09 15:22:34 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readModules.m,v $
+% $Id: readModules.m,v 1.1 2018/10/10 18:07:11 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2b/readModules.m,v $
 
 if ~exist('modulesfile', 'var')
 	modulesfile = 'modules.txt';

@@ -34,8 +34,8 @@ function dur = getScanTime(varargin)
 % (c) 2018 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: getScanTime.m,v 1.7 2018/10/09 15:29:55 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/getScanTime.m,v $
+% $Id: getScanTime.m,v 1.1 2018/10/10 18:07:10 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2b/getScanTime.m,v $
 
 %% parse inputs
 % Default values 
