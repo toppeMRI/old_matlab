@@ -1,8 +1,8 @@
 function mods = readModules(modulesfile)
 % function mods = readModules(modulesfile)
 %
-% $Id: readModules.m,v 1.1 2018/10/09 22:17:56 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/pulseq/pulseq-master/matlab/ge2seq/readModules.m,v $
+% $Id: readModules.m,v 1.3 2018/10/11 15:05:24 jfnielse Exp $
+% $Source: /export/home/jfnielse/Private/cvs/projects/pulseq/pulseq-master/matlab/ge2seq/Attic/readModules.m,v $
 
 if ~exist('modulesfile', 'var')
 	modulesfile = 'modules.txt';

@@ -1,21 +1,10 @@
-# TOPPE to Pulseq conversion
 
-(In development -- updated Oct-2018)
+ge2seq.m: 
+Convert TOPPE files to a Pulseq (.seq) file.
 
-Note: edited 'read.m' method of Pulseq @Sequence object as follows:
-  "GRAD" => "GRADIENTS"
+Uses Pulseq Matlab library in ~jfnielse/projects/pulseq/lib/matlab/, downloaded 8/24/17 as follows:
+ $ git clone https://github.com/pulseq/pulseq/
 
-### Run example
-
-In Matlab, do
-
-```
->> ge2seq();
->> ge2seq('modulesfile','mymodules.txt');
-```
-
-Uses Pulseq Matlab library downloaded 8/24/17 as follows:
-```
-$ git clone https://github.com/pulseq/pulseq/
-```
-
+Usage examples:
+>> ge2seq();    % assumes scan files are 'scanloop.txt', 'modules.txt', and 'timing.txt'
+>> ge2seq('timingfile', 'newtiming.txt');
