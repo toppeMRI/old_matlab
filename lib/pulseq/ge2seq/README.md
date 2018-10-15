@@ -3,7 +3,9 @@ ge2seq.m:
 Convert TOPPE files to a Pulseq (.seq) file.
 
 Uses Pulseq Matlab library that can be downloaded as follows:
+```
  $ git clone https://github.com/pulseq/pulseq/
+```
 
 Usage examples:
 ```
