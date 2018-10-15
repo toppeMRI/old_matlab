@@ -20,7 +20,7 @@ function loop2txt(d)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: loop2txt.m,v 1.2 2018/10/10 19:57:59 jfnielse Exp $
+% $Id: tmp.m,v 1.1 2018/10/15 13:47:18 jfnielse Exp $
 
 nt = size(d,1);              % number of startseq() calls   
 maxslice = max(d(:,7));

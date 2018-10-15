@@ -20,7 +20,7 @@ function loop2txt(d)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: loop2txt.m,v 1.1 2017/08/29 16:00:17 jfnielse Exp $
+% $Id: loop2txt.m,v 1.2 2018/10/15 13:47:18 jfnielse Exp $
 
 nt = size(d,1);              % number of startseq() calls   
 maxslice = max(d(:,7));
@@ -32,8 +32,6 @@ fprintf(fid, 'nt\tmaxslice\tmaxecho\tmaxview\n');
 fprintf(fid, '%d\t%d\t%d\t%d\n', nt, maxslice, maxecho, maxview);
 fprintf(fid, 'Core ia_rf ia_th ia_gx ia_gy ia_gz dabslice dabecho dabview dabon phi rfphase recphase \n');
 fclose(fid);
-fprintf(1,'\twriting scanloop.txt...');
 dlmwrite(fname, d, '-append', 'delimiter', '\t', 'precision', 8);  % precision=8 needed to avoid large numbers written in scientific notation
-fprintf(1,' done\n');
 
 return;

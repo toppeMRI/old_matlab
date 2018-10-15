@@ -12,6 +12,10 @@ function dur = getScanTime(varargin)
 % Output:
 %    dur          sec
 %
+% Examples:
+% >> getScanTime();
+% >> getScanTime('modulesfile', 'modules2.txt');
+%
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -30,7 +34,7 @@ function dur = getScanTime(varargin)
 % (c) 2018 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: getScanTime.m,v 1.6 2018/10/08 14:23:20 jfnielse Exp $
+% $Id: getScanTime.m,v 1.8 2018/10/15 13:47:18 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/getScanTime.m,v $
 
 %% parse inputs
@@ -42,7 +46,7 @@ arg.timingfile = 'timing.txt';
 % Substitute varargin values as appropriate
 arg = vararg_pair(arg, varargin);
 
-%% read files
+%% read scan files
 % read scanloop
 looparr = tryread(@readloop, arg.scanloopfile);
 

@@ -22,7 +22,7 @@ function d = readloop(loopfile)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: readloop.m,v 1.2 2018/10/08 12:56:19 jfnielse Exp $
+% $Id: readloop.m,v 1.3 2018/10/15 13:47:18 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readloop.m,v $
 
 if ~exist('loopfile', 'var')

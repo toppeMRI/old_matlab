@@ -1,7 +1,7 @@
 function mods = readModules(modulesfile)
 % function mods = readModules(modulesfile)
 %
-% $Id: readModules.m,v 1.1 2018/10/08 13:55:59 jfnielse Exp $
+% $Id: readModules.m,v 1.3 2018/10/15 13:47:18 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/readModules.m,v $
 
 if ~exist('modulesfile', 'var')
@@ -18,7 +18,7 @@ for ic = 1:ncores
 	cores{ic}.dur = fscanf(fid, '%d ', 1);
 	cores{ic}.hasRF = fscanf(fid, '%d ', 1);
 	cores{ic}.hasDAQ = fscanf(fid, '%d\n', 1);
-	[desc,cores{ic}.rho,cores{ic}.th,cores{ic}.gx,cores{ic}.gy,cores{ic}.gz,cores{ic}.paramsint16,cores{ic}.paramsfloat] ...
+	[desc,cores{ic}.rf,cores{ic}.gx,cores{ic}.gy,cores{ic}.gz,cores{ic}.paramsint16,cores{ic}.paramsfloat] ...
 		= readmod(cores{ic}.fname,false);
 	cores{ic}.wavdur = numel(cores{ic}.gx(:,1))*4;   % waveform duration [us]
 end
