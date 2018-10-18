@@ -18,7 +18,7 @@ function plotmod(fname)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 
-[desc,b1,gx,gy,gz,paramsint16,paramsfloat] = readmod(fname);
+[b1,gx,gy,gz] = readmod(fname);
 rho = abs(b1);
 theta = angle(b1);
 

@@ -27,11 +27,11 @@ function mat2mod(varargin)
 %   hdrints       Additional ints to put in header (max 30)
 %   system        Cell array specifying hardware system limits (per manufacturer specification).
 %                 Default:
-%                 system = {'MaxGrad', 50,  'GradUnit', 'mT/m', ...
-%                           'MaxSlew', 200, 'SlewUnit', 'T/m/s', ...
-%                           'MaxRf',   20,  'RfUnit',   'mT'};  
+%                   system = {'MaxGrad', 50,  'GradUnit', 'mT/m', ...
+%                             'MaxSlew', 200, 'SlewUnit', 'T/m/s', ...
+%                             'MaxRf',   25,  'RfUnit',   'mT'};  
 %
-% $Id: mat2mod.m,v 1.9 2018/10/15 13:47:18 jfnielse Exp $
+% $Id: mat2mod.m,v 1.13 2018/10/17 17:58:16 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/lib/v2/mat2mod.m,v $
 
 % TOPPE is free software: you can redistribute it and/or modify
@@ -72,7 +72,7 @@ system.MaxGrad  = 50;
 system.GradUnit = 'mT/m';
 system.MaxSlew  = 200;
 system.SlewUnit = 'T/m/s';
-system.MaxRf    = 20;
+system.MaxRf    = 25;
 system.RfUnit   = 'mT';
 if ~isempty(arg.system)
 	% Substitute specified system values as appropriate
@@ -159,7 +159,7 @@ for ii = 1:3
 end
 
 rasterTime = 4e-3;
-gslew = diff([gx gy gz]/rasterTime,1);
+gslew = diff([gx gy gz]/rasterTime,1);   % Gauss/cm/ms
 maxslew = max(gslew);
 grads = 'xyz';
 for ii = 1:3
