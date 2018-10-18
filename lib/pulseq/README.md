@@ -1,3 +1,4 @@
 # Conversion to/from Pulseq
 
-Under construction Oct 18, 2018)
+Under construction 
+Oct 18, 2018
