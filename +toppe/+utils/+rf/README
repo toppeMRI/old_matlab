@@ -1,0 +1,4 @@
+makeslr.m: make slice-selective SLR pulse. Calls John Pauly's dzrf() and adds slice-select gradients.
+
+makebs.m: make Fermi pulse for Bloch-Siegert mapping.
+calckbs.m: calculate K_BS (shape factor) for Bloch-Siegert mapping
