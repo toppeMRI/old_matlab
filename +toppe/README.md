@@ -11,14 +11,14 @@ https://toppemri.github.io/
 
 ## A typical workflow
 
-1. Design RF and gradient waveforms 
+1. Design RF and gradient waveforms
 
 2. Edit systemspecs.m according to your scanner, or call with options.
 ```
 >> sys = toppe.systemspecs();
 ```
 
-3. Use 'writemod.m' to write each set of rf/gradient waveforms to a .mod file, e.g., 
+3. Use 'writemod.m' to write each set of rf/gradient waveforms to a .mod file, e.g.,
 ```
 >> toppe.writemod('rf', rfwav, 'gz', gzwav, 'ofname', 'tipdown.mod', 'system', sys);
 ```
@@ -47,7 +47,7 @@ Display part of the sequence:
 >> d = toppe.readloop('scanloop.txt');
 >> sys = toppe.systemspecs();
 >> sys.toppe.timessi = 200;   % us
->> toppe.plotseq(ibeg, iend, 'loopArr', d, 'system', sys);  
+>> toppe.plotseq(ibeg, iend, 'loopArr', d, 'system', sys);
 ```
 
 Display sequence in movie/loop mode.
@@ -70,7 +70,7 @@ or
 2. Add the following to the top of your .m file:
 ```
 import toppe.*
-import toppe.utils.* 
+import toppe.utils.*
 ```
 and call the functions without the prefix:
 ```
@@ -103,6 +103,4 @@ To list package contents, do
 * The name of an array of variables/structs is <variable name>Array (e.g., moduleArr)
 
 * prefix n is used for variables representing the number of objects
-
-
 
