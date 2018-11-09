@@ -54,7 +54,7 @@ Display sequence in movie/loop mode.
 ```
 >> nModulesPerTR = 3;
 >> toppe.playseq(nModulesPerTR);
-
+```
 
 ## Using +toppe package functions in your .m files
 
