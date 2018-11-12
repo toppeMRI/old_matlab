@@ -11,7 +11,7 @@ https://toppemri.github.io/
 
 ## A typical workflow
 
-1. Design RF and gradient waveforms
+1. Design RF and gradient waveforms (functions in +utils/+rf/ and +utils/+epi/ may be helpful for you)
 
 2. Edit systemspecs.m according to your scanner, or call with options.
 ```
