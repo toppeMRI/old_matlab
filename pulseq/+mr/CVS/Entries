@@ -1,0 +1,23 @@
+/Contents.m/1.1/Mon Oct 22 23:56:09 2018//
+/README/1.1/Mon Oct 22 23:56:09 2018//
+/addRamps.m/1.1/Mon Oct 22 23:56:10 2018//
+/block2events.m/1.1/Mon Oct 22 23:56:10 2018//
+/calcDuration.m/1.1/Mon Oct 22 23:56:10 2018//
+/calcRamp.m/1.1/Mon Oct 22 23:56:10 2018//
+/compile_mex.m/1.1/Mon Oct 22 23:56:10 2018//
+/compile_mex.prj/1.1/Mon Oct 22 23:56:10 2018//
+/compressShape.m/1.1/Mon Oct 22 23:56:10 2018//
+/compressShape_mat.m/1.1/Mon Oct 22 23:56:10 2018//
+/convert.m/1.1/Mon Oct 22 23:56:10 2018//
+/decompressShape.m/1.1/Mon Oct 22 23:56:10 2018//
+/makeAdc.m/1.1/Mon Oct 22 23:56:10 2018//
+/makeArbitraryGrad.m/1.1/Mon Oct 22 23:56:10 2018//
+/makeBlockPulse.m/1.1/Mon Oct 22 23:56:11 2018//
+/makeDelay.m/1.1/Mon Oct 22 23:56:11 2018//
+/makeSincPulse.m/1.1/Mon Oct 22 23:56:11 2018//
+/makeTrapezoid.m/1.1/Mon Oct 22 23:56:11 2018//
+/opts.m/1.1/Mon Oct 22 23:56:11 2018//
+/traj2grad.m/1.1/Mon Oct 22 23:56:11 2018//
+D/@EventLibrary////
+D/@Sequence////
+/makeArbitraryRf.m/1.2/Mon Nov 12 19:17:20 2018//
