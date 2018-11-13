@@ -42,7 +42,7 @@ function writemod(varargin)
 % (c) 2017-18 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: writemod.m,v 1.9 2018/11/13 17:56:29 jfnielse Exp $
+% $Id: writemod.m,v 1.10 2018/11/13 18:07:29 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/writemod.m,v $
 
 import toppe.*
@@ -136,10 +136,16 @@ end
 %% Optional header arrays
 [paramsfloat] = sub_myrfstat(abs(rf(:,1,1)), arg.nomflip, system);
 if ~isempty(arg.hdrfloats)
+	if length(arg.hdrfloats) > 30
+		error('max number of ints in .mod file header is 30');
+	end
 	paramsfloat(20:(19+length(arg.hdrfloats))) = arg.hdrfloats;  % populate header with custom floats 
 end
 paramsint16 = [0 size(rf,1)];
 if ~isempty(arg.hdrints)
+	if length(arg.hdrints) > 30
+		error('max number of ints in .mod file header is 30');
+	end
 	paramsint16(3:(2+length(arg.hdrints))) = arg.hdrints;  % populate header with custom ints
 end
 

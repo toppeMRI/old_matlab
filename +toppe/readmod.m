@@ -20,7 +20,7 @@ function [rf,gx,gy,gz,desc,paramsint16,paramsfloat] = readmod(fname,showinfo)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: readmod.m,v 1.3 2018/10/25 15:35:02 jfnielse Exp $
+% $Id: readmod.m,v 1.5 2018/11/13 18:07:29 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/readmod.m,v $
 
 import toppe.*
@@ -93,7 +93,7 @@ theta = reshape(theta, res, npulses, ncoils);
 gx    = reshape(gx,    res, npulses);
 gy    = reshape(gy,    res, npulses);
 gz    = reshape(gz,    res, npulses);
-paramsint16 = paramsint16';
+paramsint16 = paramsint16(3:end)';             % NB! Return only the user-defined ints passed to writemod.m
 paramsfloat = paramsfloat';
 
 rf = rho.*exp(1i*theta);
