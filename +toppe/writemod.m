@@ -42,7 +42,7 @@ function writemod(varargin)
 % (c) 2017-18 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 %
-% $Id: writemod.m,v 1.8 2018/10/26 23:42:22 jfnielse Exp $
+% $Id: writemod.m,v 1.9 2018/11/13 17:56:29 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/writemod.m,v $
 
 import toppe.*
@@ -94,8 +94,14 @@ end
 %% Force all waveform arrays to have the same dimensions (required by toppev2.e)
 ndat    = max( [size(rf,1) size(gx,1) size(gy,1) size(gz,1)] );
 npulses = max( [size(rf,2) size(gx,2) size(gy,2) size(gz,2)] );
-if ~ndat 
+if isempty(ndat)
 	error('At least one waveform must be specified');
+end
+
+% make length divisible by 4 (EPIC seems to behave best this way)
+if mod(ndat, 4)
+	warning('Waveform duration will be padded to 4 sample boundary.')
+	ndat = ndat - mod(ndat, 4) + 4;
 end
 
 for ii = 1:length(fields)
@@ -119,17 +125,11 @@ for ii = 1:length(fields)
 	wav = [wav; zeros(ndat-nrows,n2)];
 	wav = [wav  zeros(ndat,npulses-n2)];
 
-	wav = [zeros(2,npulses); wav];   % to avoid non-zero gradients at beginning which causes problems with readmod
-
-	% make length divisible by 4 (EPIC seems to behave best this way)
-	wav = makeGElength(wav);
-
 	% copy to corresponding wav type (rf, gx, gy, or gz)
 	cmd = sprintf('%s = %s;', wavtype, 'wav') ;
 	eval (cmd);
 end
 	
-
 % Fixes to avoid idiosyncratic issues on scanner
 %[rho,theta,gx,gy,gz] = sub_prepare_for_modfile(rho,theta,gx,gy,gz,addrframp);
 

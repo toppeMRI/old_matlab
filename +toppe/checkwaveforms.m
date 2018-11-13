@@ -14,7 +14,7 @@ function isValid = checkwaveforms(varargin)
 % Output
 %  isValid    boolean/logical (true/false)
 %
-% $Id: checkwaveforms.m,v 1.9 2018/11/02 18:36:33 jfnielse Exp $
+% $Id: checkwaveforms.m,v 1.10 2018/11/13 17:56:29 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/checkwaveforms.m,v $
 
 import toppe.*
@@ -68,8 +68,9 @@ isValid = true;
 
 tol = 1;     %
 
-% gradient amplitude
 grads = 'xyz';
+
+% gradient amplitude
 for ii = 1:3
 	cmd = sprintf('maxg = max(abs(g%s(:)));', grads(ii));   % Gauss
 	eval(cmd);
@@ -80,7 +81,6 @@ for ii = 1:3
 end
 
 % gradient slew
-grads = 'xyz';
 for ii = 1:3
 	cmd = sprintf('maxSlew = max(abs(diff(g%s/(system.raster*1e3))));', grads(ii));
 	eval(cmd);
@@ -94,6 +94,25 @@ end
 maxRf = max(abs(rf));
 if maxRf > system.maxRf
 	fprintf('Error: rf amplitude exceeds system limit (%.1f%%)\n', maxRf/system.maxRf*100);
+	isValid = false;
+end
+
+%% Is (max) waveform duration on a 4 sample (16us) boundary?
+ndat = max( [size(rf,1) size(gx,1) size(gy,1) size(gz,1)] );
+if mod(ndat, 4)
+	fprintf('Error: waveform duration must be on a 4 sample (16 us) boundary.');
+	isValid = false;
+end
+
+%% do all waveforms start and end at zero?
+for ii = 1:3
+	eval(sprintf('if isempty(g%s); g%s = 0; end', grads(ii), grads(ii)));
+end
+if isempty(rf)
+	rf = 0;
+end
+if any([gx(1,:) gx(end,:) gy(1,:) gy(end,:) gz(1,:) gz(end,:) rf(1,:) rf(end,:)] ~= 0)
+	fprintf('Error: all waveforms must begin and end with zero\n')
 	isValid = false;
 end
 
