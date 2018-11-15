@@ -1,3 +1,4 @@
+% I recommend using trapwave2.m instead.
 %
 %	function [waveform,t] = trapwave(area,T,gmax,smax)
 %

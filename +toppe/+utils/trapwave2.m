@@ -9,7 +9,7 @@ function waveform = trapwave2(area, mxg, mxs, rasterTime)
 %  area        G/cm*sec
 %  mxg         G/cm
 %  mxs         G/cm/ms
-%  rasterTime  ms (On GE this should 4e-3)
+%  rasterTime  ms (On GE this should be 4e-3)
 % 
 % $Id: trapwave2.m,v 1.9 2018/11/15 14:26:55 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/+utils/trapwave2.m,v $
