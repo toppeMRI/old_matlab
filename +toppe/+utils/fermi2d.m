@@ -5,8 +5,6 @@ function [fCirc, fRect] = fermi2d(sz,radius,width)
 %
 % From Doug Noll.
 % jfn added rectangular filter output
-%
-% $Id: fermi2d.m,v 1.4 2018/11/14 20:34:15 jfnielse Exp $
 
 %
 % [x,y]= meshdom(-64:1:63,  63:-1:-64);
