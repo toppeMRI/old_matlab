@@ -1,12 +1,12 @@
 % zero fill 3D images, Fermi-filtered (in-plane) to reduce ringing
 %
+% function imout = zeropad(imin, res, fltwidth, type)
+%
 % imin        [nx ny nz]
 % res         [nxtarget nytarget nztarget]      
 % fltwidth    Fermi filter transition width (pixels). Default: 2.
 % type        'circ' (default) or 'rect'
 %
-% $Id: zeropad.m,v 1.7 2018/11/14 20:30:43 jfnielse Exp $
-% $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/+utils/Attic/zeropad.m,v $
 
 function imout = zeropad(imin, res, fltwidth, type)
 
