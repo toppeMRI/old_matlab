@@ -1,8 +1,8 @@
 function dur = getTRtime(LineStart,LineEnd,varargin)
-% Get scan time between LineStart and LineEnd of a scanloop.
+% Get scan time to run lines LineStart through LineEnd of a scanloop.
 % Useful for calculating the TR of just a portion of your scan
 %
-% function dur = getscantime(varargin)
+% function dur = getTRtime(LineStart,LineEnd,varargin)
 %
 %
 % Input options:
@@ -16,7 +16,7 @@ function dur = getTRtime(LineStart,LineEnd,varargin)
 %    dur          sec
 %
 % Examples:
-% >> toppe.getTRtime(100,102);
+% >> toppe.getTRtime(100,102); %Time to run lines 100 through 102
 
 % This file is part of the TOPPE development environment for platform-independent MR pulse programming.
 %
@@ -62,7 +62,7 @@ if LineStart > LineEnd
     error('Starting line must be smaller than ending line');
 end
 if LineEnd > size(loopArr,1)
-    error(sprintf('Ending line (%d) is greater than scanloop (%d).\n',LineEnd,size(loopArr,1)))
+    error('Ending line (%d) is greater than scanloop (%d).\n',LineEnd,size(loopArr,1));
 end
 if floor(LineStart) ~= LineStart || floor(LineEnd) ~= LineEnd
     error('Line values must be integers');
@@ -72,11 +72,7 @@ end
 dt = 4e-6;    % duration of one gradient/rf sample (sec)
 dur = 0;
 fprintf('Calculation duration between lines %d and lines %d...',LineStart,LineEnd);
-size(loopArr,1)
 for ii = LineStart:LineEnd
-	if ~mod(ii,10000)
-		fprintf('.');
-	end
 	rho = toppe.plotseq(ii, ii, 'loopArr', loopArr, 'mods', mods, 'doDisplay', false, 'system', arg.system);
 	dur = dur + size(rho,1)*dt;
 end
