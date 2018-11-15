@@ -1,6 +1,6 @@
-% I recommend using trapwave2.m instead.
+%  Deprecated. Use trapwave2.m instead.
 %
-%	function [waveform,t] = trapwave(area,T,gmax,smax)
+%	function [waveform] = trapwave(area,T,gmax,smax)
 %
 %	Function returns the minimum-duration waveform with
 %	the given area.
@@ -37,9 +37,12 @@
 % ---------------------------------------------------------------
 
 
-function [waveform,t] = trapwave(area,T,gmax,smax)
+function [waveform] = trapwave(area,T,gmax,smax)
 
 import toppe.utils.*
+
+waveform = trapwave2(area, T*1e-3, gmax, 1e3*sma);
+return;
 
 garea=abs(area);	% Same for positive and negative areas.
 
