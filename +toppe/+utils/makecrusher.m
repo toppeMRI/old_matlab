@@ -8,7 +8,7 @@ function gcrush = makecrusher(ncycles,opslthick,gzarea,mxs,mxg)
 %   mxs         -- max slew rate [G/cm/msec]. Default: 10.
 %   mxg         -- max gradient [G/cm]. Default: 4.
 % 
-% $Id: makecrusher.m,v 1.6 2018/11/05 22:38:38 jfnielse Exp $
+% $Id: makecrusher.m,v 1.7 2018/11/15 14:26:55 jfnielse Exp $
 
 import toppe.utils.*
 
@@ -28,7 +28,7 @@ area = ncycles/(gamma*opslthick);           % G/cm*sec
 %gcrush = trapwave(area-gzarea,4e-6,mxg,mxs*1e3);
 dt = 4e-3;   % ms
 gcrush = trapwave2(area-gzarea, mxg, mxs, dt);
-gcrush = makeevenlength(gcrush(:));
+gcrush = makeGElength(gcrush(:));
 
 return;
 

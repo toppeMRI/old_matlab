@@ -28,7 +28,7 @@ function [rf, g, freq, fnamestem] = makeslr(flip, slthick, tbw, dur, ncycles, va
 %  >> sys = systemspecs('maxGrad', 3, 'maxSlew', 10);
 %  >> [rf,g] = toppe.utils.rf.makeslr(180, 0.5, 8, 8, 4, 'type', 'se', 'system', sys);
 %
-% $Id: makeslr.m,v 1.26 2018/11/02 22:23:57 jfnielse Exp $
+% $Id: makeslr.m,v 1.27 2018/11/15 14:26:50 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/+utils/+rf/makeslr.m,v $
 
 import toppe.*
@@ -195,7 +195,7 @@ function [rf,gss,irep,iref,gplateau,areaprep,idep,arearep] = sub_myslrrf(dur, tb
 %  iref       - location of "center" of RF pulse (point from which TE is to be calculated) (sample #)
 %  gplateau   - amplitude of slice-select gradient (needed for off-isocenter slices)
 %
-% $Id: makeslr.m,v 1.26 2018/11/02 22:23:57 jfnielse Exp $
+% $Id: makeslr.m,v 1.27 2018/11/15 14:26:50 jfnielse Exp $
 
 import toppe.*
 import toppe.utils.*
@@ -252,7 +252,7 @@ switch type
 		%area = sum(gss((midpoint+1):end)) * dt * 1e-3  ;          % G/cm*s
 		arearep = sum([gss((iref+1):end)]) * dt * 1e-3;            % G/cm*s
 		gzrep = -trapwave2(arearep, mxg, mxs, dt);
-		gzrep = [gzrep zeros(1,mod(length(gzrep),2)) ];            % make length even
+		%gzrep = [gzrep zeros(1,mod(length(gzrep),2)) ];            % make length even
 	case 'se'
 		gzrep = [];
 	case 'inv'
@@ -284,5 +284,9 @@ idep = numel(gzprep);
 
 % make gss and rf the same length. 
 rf = [0*gzprep(:); zeros(length(ramp),1); rf; zeros(length(ramp)+length(gzrep),1)];
+
+% ensure that duration is on a 16 us (4 sample) boundary
+rf = makeGElength(rf(:));
+gss = makeGElength(gss(:));
 
 return;

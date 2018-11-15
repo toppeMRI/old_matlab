@@ -15,7 +15,7 @@
 %
 %	Brian Hargreaves, July 2002.
 %
-% $Id: trapwave.m,v 1.2 2018/10/26 01:38:45 jfnielse Exp $
+% $Id: trapwave.m,v 1.3 2018/11/15 14:26:55 jfnielse Exp $
 
 % ---------------------------------------------------------------
 %  CVS Log Messages
@@ -118,4 +118,10 @@ if (y>1.01*smax)
         tt=sprintf(' --- Warning (trapwave):  Slew Violation, sample %d ------',I);
         disp(tt);
 end;
+
+% waveforms must begin and end with zero (TOPPE convention)
+waveform = [0 waveform 0];
+
+% duration must be on 4 sample (16 us) boundary (TOPPE convention)
+waveform = makeGElength(waveform(:))';
 

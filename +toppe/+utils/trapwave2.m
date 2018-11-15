@@ -11,7 +11,7 @@ function waveform = trapwave2(area, mxg, mxs, rasterTime)
 %  mxs         G/cm/ms
 %  rasterTime  ms (On GE this should 4e-3)
 % 
-% $Id: trapwave2.m,v 1.8 2018/11/05 15:15:01 jfnielse Exp $
+% $Id: trapwave2.m,v 1.9 2018/11/15 14:26:55 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/+utils/trapwave2.m,v $
 
 area = area*1e3;  % G/cm*msec
@@ -48,6 +48,12 @@ if wavArea < area
 	error('Can''t scale down to desired area. Bug in code');
 end
 waveform = waveform/wavArea*area;
+
+% waveforms must begin and end with zero (TOPPE convention)
+waveform = [0  waveform 0];
+
+% duration must be on 4 sample (16 us) boundary (TOPPE convention)
+waveform = makeGElength(waveform(:))';
 
 return;
 

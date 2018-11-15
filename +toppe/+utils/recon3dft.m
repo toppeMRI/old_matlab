@@ -13,7 +13,7 @@ function [ims imsos d]= recon3dft(pfile,echo,readoutfile,dokzft,zpad,dodisplay,c
 % Output:
 %  ims:          [nx ny nz ncoils]    
 %
-% $Id: recon3dft.m,v 1.7 2018/11/06 18:45:01 jfnielse Exp $
+% $Id: recon3dft.m,v 1.8 2018/11/13 18:41:36 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/+utils/recon3dft.m,v $
 
 import toppe.*
@@ -49,8 +49,8 @@ d = flipdim(d,1);        % data is stored in reverse order for some reason
 % get flat portion of readout
 [rf,gx,gy,gz,desc,paramsint16,paramsfloat] = readmod(readoutfile);
 nramp = 0; %15;  % see writemod.m
-nbeg = paramsint16(3) + nramp;  
-nx = paramsint16(4);  % number of acquired data samples per TR
+nbeg = paramsint16(1) + nramp;  
+nx = paramsint16(2);  % number of acquired data samples per TR
 decimation = round(125/paramsfloat(20));
 d = d(nbeg:(nbeg+nx-1),:,:,:,:);     % [nx*125/oprbw ny nz ncoils nechoes]
 
@@ -104,7 +104,7 @@ function im = ift3(D,do3dfft)
 %
 %	Centered inverse 3DFT of a 3D data matrix.
 % 
-% $Id: recon3dft.m,v 1.7 2018/11/06 18:45:01 jfnielse Exp $
+% $Id: recon3dft.m,v 1.8 2018/11/13 18:41:36 jfnielse Exp $
 
 if ~exist('do3dfft','var')
 	do3dfft = true;

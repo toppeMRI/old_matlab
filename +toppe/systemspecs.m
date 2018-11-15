@@ -33,7 +33,7 @@ function sys = systemspecs(varargin)
 %  >> sys = systemspecs();                   % use default values
 %  >> sys = system('maxSlice', 50);          % sets maxSlice to 50; otherwise contains default values
 %
-% $Id: systemspecs.m,v 1.9 2018/11/04 14:48:47 jfnielse Exp $
+% $Id: systemspecs.m,v 1.10 2018/11/12 20:20:33 jfnielse Exp $
 % $Source: /export/home/jfnielse/Private/cvs/projects/psd/toppe/matlab/+toppe/systemspecs.m,v $
 
 %% Defaults
@@ -48,7 +48,7 @@ sys.gamma    = 4.2576e3;       % Hz/Gauss
 sys.maxSlice = 200;            % max dabslice. I don't yet know what the limit is here.
 sys.maxView  = 250;            % also not sure here
 sys.maxEcho  = 16;             % about right
-sys.addDelays = true ;         % set time gaps in sys.toppe to zero?
+sys.addDelays = true ;         % False: set time gaps to zero.
 
 % sys.toppe struct relates to the TOPPE interpreter/driver.
 % You shouldn't edit these.

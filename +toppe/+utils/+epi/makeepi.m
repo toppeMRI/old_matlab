@@ -16,7 +16,7 @@ function [gx,gy,gz,fname] = makeepi(fov, npix, zres, ncycles, varargin)
 %  oprbw      receive bandwidth. Default: 125/4 kHz
 %  slthick    cm
 %
-% $Id: makeepi.m,v 1.9 2018/11/05 23:48:08 jfnielse Exp $
+% $Id: makeepi.m,v 1.10 2018/11/13 18:41:39 jfnielse Exp $
 
 import toppe.*
 import toppe.utils.*
@@ -124,9 +124,9 @@ if mod(npre,2)
 	iref = iref+1;
 end
 
-gx = makeevenlength(gx(:));
-gy = makeevenlength(gy(:));
-gz = makeevenlength(gz(:));
+gx = makeGElength(gx(:));
+gy = makeGElength(gy(:));
+gz = makeGElength(gz(:));
 
 %[areacrush-sum(gx)*dt*1e-3]   % check that net gradient area is equal to areacrush 
 
@@ -156,7 +156,7 @@ else
 	fname = sprintf('gre-fov%dmm-npix%d-ncycles%.1f-oprbw%.3f-zres%dmm-%s.mod', ...
 	10*fov, npix, ncycles, arg.oprbw, zres, date);
 end
-hdrints = [npre+2 npixro iref+2];    % some useful numbers for recon. +2 to compensate for 2 zeros added by writemod.m
+hdrints = [npre npixro iref];    % some useful numbers for recon
 hdrfloats = [arg.oprbw];
 writemod('gx', gx(:), 'gy', gy(:), 'gz', gz(:), 'ofname', fname, ...
          'desc', 'spin-warp (GRE) waveform', 'hdrints', hdrints, 'hdrfloats', hdrfloats);
