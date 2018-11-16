@@ -1,6 +1,6 @@
-## TOPPE Matlab code
+## +toppe
 
-+toppe: package (namespace) with basic toppe functions such as writemod.m, plotmod.m, playseq.m.
+Matlab package (namespace) with basic toppe functions such as writemod.m, plotmod.m, playseq.m.
 
 +toppe/+utils/: scripts for loading raw data from P-files, and other scripts.
 
@@ -8,8 +8,12 @@
 
 +toppe/+utils/+rf/: make slice-selective SLR pulse with makeslr.m
 
-./pulseq/: convert to/from Pulseq file format
+## ./pulseq/
 
-./epic/: EPIC .e source code
+Matlab scripts for converting to/from Pulseq file format. WIP.
+
+## ./epic/
+
+EPIC .e source code
 
 
