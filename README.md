@@ -10,7 +10,6 @@
 
 ./pulseq/: convert to/from Pulseq file format
 
-./examples/: complete TOPPE sequence examples [TODO]
-
+./epic/: EPIC .e source code
 
 
