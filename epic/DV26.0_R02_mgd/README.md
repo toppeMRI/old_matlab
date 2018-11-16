@@ -1,5 +1,7 @@
 ## TOPPE EPIC code
 
+The toppe .e file name to compile is specified in Imakefile
+
 To compile (on jackson):
 
 ```
