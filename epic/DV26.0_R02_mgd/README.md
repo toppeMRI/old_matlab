@@ -1,4 +1,4 @@
-## TOPPE EPIC code
+# TOPPE EPIC code
 
 The toppe .e file name to compile is specified in Imakefile
 
@@ -12,3 +12,6 @@ prep_psd_dir
 psdqmake hw
 ```
 
+## Versions
+
+toppev2b: like toppev2, but should guarantee correct b1 scaling
