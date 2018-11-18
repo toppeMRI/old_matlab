@@ -3,6 +3,8 @@ function dat = loadpfilefast(pfile)
 % Doesn't depend on loaddat_ge
 % Checks that pfile matches header size
 
+import toppe.utils.*
+
 %% Loadpfile code
 fid = fopen(pfile,'r','l');
 ver = fread(fid,1,'float32');
@@ -42,12 +44,12 @@ for icoil = 1:ncoils
     for islice = 2:nslices   % skip first slice (sometimes contains corrupted data)
         for iecho = 1:nechoes % Echo starts at 1
             for iview = 1:nviews
-            offsetres = (icoil-1)*coilres + (islice-1)*sliceres + (iecho-1)*echores + iview*ndat;
-            offsetbytes = 2*ptsize*offsetres;
-            fseek(fid, rdb_hdr.off_data+offsetbytes, 'bof');
-            dtmp = fread(fid, 2*ndat, 'int16=>int16');
-            datr(:,icoil,islice-1,iecho,iview) = dtmp(1:2:end); %Real data
-            dati(:,icoil,islice-1,iecho,iview) = dtmp(2:2:end); %Imag
+                offsetres = (icoil-1)*coilres + (islice-1)*sliceres + (iecho-1)*echores + iview*ndat;
+                offsetbytes = 2*ptsize*offsetres;
+                fseek(fid, rdb_hdr.off_data+offsetbytes, 'bof');
+                dtmp = fread(fid, 2*ndat, 'int16=>int16');
+                datr(:,icoil,islice-1,iecho,iview) = dtmp(1:2:end); %Real data
+                dati(:,icoil,islice-1,iecho,iview) = dtmp(2:2:end); %Imag
             end
         end
     end
