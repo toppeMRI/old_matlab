@@ -20,49 +20,72 @@ function [dat, rdb_hdr] = loadpfile(pfile,echo)
 % (c) 2016 The Regents of the University of Michigan
 % Jon-Fredrik Nielsen, jfnielse@umich.edu
 
-import toppe.*
 import toppe.utils.*
 
-% read Pfile header
+%% Loadpfile code
 fid = fopen(pfile,'r','l');
 ver = fread(fid,1,'float32');
 str = num2str(ver);
-fprintf('Pfile version is %s\n', str);
 rdbm_rev = str2double(str);
 fseek(fid,0,'bof');                 % NB!
-rdb_hdr = toppe.utils.read_rdb_hdr(fid,rdbm_rev);
+rdb_hdr = read_rdb_hdr(fid,rdbm_rev);
 
+
+%% Header parameters
 ndat    = rdb_hdr.frame_size;
 nslices = rdb_hdr.nslices;
+ptsize  = rdb_hdr.point_size;                    % Either 2 (data stored in short int format, int16) or 4 (extended precision)
 nechoes = rdb_hdr.nechoes;
 nviews  = rdb_hdr.nframes;
 ncoils  = rdb_hdr.dab(2)-rdb_hdr.dab(1)+1;
 
-fprintf(1,'ndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n', ndat, nslices, nechoes, nviews, ncoils);
-
+%% Determine which echoes to load in
 if exist('echo','var')
 	ECHOES = echo;
 else
 	ECHOES = 1:nechoes;
 end
 
-if max(ECHOES) > nechoes
-	error('max echo is %d', nechoes);
+%% Calculate size of data chunks. See pfilestruct.jpg, and rhrawsize calculation in .e file.
+echores  = ndat*(nviews+1);                 % number of data points per 'echo' loaddab slot. Includes baseline (0) view.
+sliceres = nechoes*echores;                 % number of data points per 'slice'
+coilres  = nslices*sliceres;                % number of data points per receive coil
+
+pfilesize = rdb_hdr.off_data + 2*ptsize*ncoils*nslices*nechoes*(nviews+1)*ndat;   % this should match the Pfile size exactly
+pfilename=dir(pfile);
+
+if pfilesize ~= pfilename.bytes
+    fprintf('Expected %0.1fMB file but read in %0.1fMB file.\n',pfilesize,pfilename.bytes/1e6)
+    error('Pfile size/header mismatch');
 end
 
-%dat = zeros([ndat ncoils nslices nechoes nviews]);
-for slice = 2:nslices   % skip first slice (sometimes contains corrupted data)
-	for ie = 1:numel(ECHOES)
-		echo = ECHOES(ie);
-		for view = 1:nviews
-			[dattmp pfilesize] = loaddat_ge(fid,rdb_hdr,slice-1,echo-1,view);     % [ndat ncoils]. Skip baseline (0) view.
-			dat(:,:,slice-1,ie,view) = dattmp; 
-		end
-		%fprintf(1,'%d  ',ftell(fid));
-	end
+fprintf(1,'\nndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n', ndat, nslices, nechoes, nviews, ncoils);
+
+%% Read data from file
+datr = int16(zeros(ndat,ncoils,nslices-1,numel(ECHOES),nviews));
+dati = datr;
+for icoil = 1:ncoils
+    for islice = 2:nslices   % skip first slice (sometimes contains corrupted data)
+        for iecho = ECHOES % Load every element in ECHOES
+            for iview = 1:nviews
+                offsetres = (icoil-1)*coilres + (islice-1)*sliceres + (iecho-1)*echores + iview*ndat;
+                offsetbytes = 2*ptsize*offsetres;
+                fseek(fid, rdb_hdr.off_data+offsetbytes, 'bof');
+                dtmp = fread(fid, 2*ndat, 'int16=>int16');
+                datr(:,icoil,islice-1,iecho,iview) = dtmp(1:2:end); %Real data
+                dati(:,icoil,islice-1,iecho,iview) = dtmp(2:2:end); %Imag
+            end
+        end
+    end
 end
-%fprintf(1,'%d  ',ftell(fid));
+
+%Combine real+imag in one step. This ends up using 2 times as much memory
+%since the complex data exists twice (datr+dati and dat) but is faster
+%since complex function is vectorized. May cause issues if your computer is
+%RAM limited...
+
+dat = complex(datr,dati); % Combine data in one step
+clearvars datr dati % Free up some memory
+dat = double(dat);  % Convert to double in place
 fclose(fid);
-fprintf(1,'Expected pfilesize = %d\n', pfilesize);
-return;
-
+return
