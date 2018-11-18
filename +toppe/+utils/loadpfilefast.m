@@ -52,7 +52,7 @@ for icoil = 1:ncoils
         end
     end
 end
-dat = complex(datr,dati); %Combine real+imag
+dat = double(complex(datr,dati)); %Combine real+imag
 fclose(fid);
 
 return;
