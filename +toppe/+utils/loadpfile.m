@@ -65,7 +65,9 @@ fprintf(1,'\nndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n',
 %% Read data from file
 datr = int16(zeros(ndat,ncoils,nslices-1,numel(ECHOES),nviews));
 dati = datr;
+textprogressbar('Loading data: ');
 for icoil = 1:ncoils
+    textprogressbar(icoil/ncoils*100);
     for islice = 2:nslices   % skip first slice (sometimes contains corrupted data)
         for iecho = ECHOES % Load every element in ECHOES
             for iview = 1:nviews
@@ -79,7 +81,6 @@ for icoil = 1:ncoils
         end
     end
 end
-
 %Combine real+imag in one step. This ends up using 2 times as much memory
 %since the complex data exists twice (datr+dati and dat) but is faster
 %since complex function is vectorized. May cause issues if your computer is
@@ -89,4 +90,5 @@ dat = complex(datr,dati); % Combine data in one step
 clearvars datr dati % Free up some memory
 dat = double(dat);  % Convert to double in place
 fclose(fid);
+textprogressbar(' done.');
 return
