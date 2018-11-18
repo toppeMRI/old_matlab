@@ -55,8 +55,9 @@ pfilesize = rdb_hdr.off_data + 2*ptsize*ncoils*nslices*nechoes*(nviews+1)*ndat; 
 pfilename=dir(pfile);
 
 if pfilesize ~= pfilename.bytes
-    fprintf('Expected %0.1fMB file but read in %0.1fMB file.\n',pfilesize,pfilename.bytes/1e6)
-    error('Pfile size/header mismatch');
+    warning('Expected %0.1fMB file but read in %0.1fMB file.\n',pfilesize,pfilename.bytes/1e6)
+    fprintf('Press enter to continue anyway...');
+    input('');
 end
 
 fprintf(1,'\nndat = %d, nslices = %d, nechoes = %d, nviews = %d, ncoils = %d\n', ndat, nslices, nechoes, nviews, ncoils);
