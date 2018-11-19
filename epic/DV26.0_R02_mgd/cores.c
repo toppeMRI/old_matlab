@@ -144,7 +144,7 @@ int cores_readloop(char *fname, int* looparr) {
 		return(JFN_FAILURE);
 
 	fgets(&line, 200, fid);   /* skip line */
-	fscanf(fid, "%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3])); 
+	fscanf(fid, "%d\t%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]), &(loophdr[4])); 
 	nt = loophdr[0];
 
 	fgets(&line, 200, fid);   /* skip line */
