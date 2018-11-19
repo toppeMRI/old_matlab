@@ -499,14 +499,20 @@ int predownload()
 	/* readout gradients - calculate 'em here  */
 	
 	/* get ndaq */
-	jfn_rf_readheader("readout.mod", &roinfo);
+	if (jfn_rf_readheader("readout.mod", &roinfo) == JFN_FAILURE) {
+		epic_error(use_ermes, "error in jfn_rf_readheader when reading readout.mod.",0,0);
+		return FAILURE;
+	}
 	npre = roinfo.npre;
 	ndaq = roinfo.rfres;
 
 	/* core array stuff (TOPPE) */
 
 	/* get scan loop header info */
-	cores_getloophdr("scanloop.txt", loophdr);
+	if ( cores_getloophdr("scanloop.txt", loophdr) == JFN_FAILURE ) {
+		epic_error(use_ermes, "cores_getloophdr call failed",0,0);
+		return FAILURE;
+	}
 	nstartseq = loophdr[0];
 	maxslice  = loophdr[1];
 	maxecho   = loophdr[2];
@@ -514,16 +520,26 @@ int predownload()
 	fprintf(stderr, "predownload(): nstartseq = %d, maxslice/maxecho/maxview = %d/%d/%d \n", nstartseq, maxslice, maxecho, maxview);
 
 	/* get total number of unique cores, and fill hasDAQ and hasRF arrays */
-	cores_getinfo("modules.txt", &coredefinfo);
+	if (cores_getinfo("modules.txt", &coredefinfo)== JFN_FAILURE) {
+		epic_error(use_ermes, "Error in cores_getinfo when reading modules.txt",0,0);
+		return FAILURE;
+	};
 	ncores = coredefinfo.ncores;
 	for (j=0; j<ncores; j++) {
 		hasRF[j] = coredefinfo.hasRF[j];
 		hasDAQ[j] = coredefinfo.hasDAQ[j];
 		fprintf(stderr, "hasRF[%d] = %d, hasDAQ[%d] = %d\n", j, hasRF[j], j, hasDAQ[j]);
+		if (hasRF[j] && hasDAQ[j]) {
+			epic_error(use_ermes, "Core can only use either ADC or RF excitation.",0,0);
+			return FAILURE;
+		}
 	}
 
 	/* fill looparr (needed in scan()) */
-	cores_readloop("scanloop.txt", looparr);
+	if ( cores_readloop("scanloop.txt", looparr, LOOPARRLENGTH) == JFN_FAILURE ) {
+		epic_error(use_ermes, "cores readloop call failed",0,0);
+		return FAILURE;
+	}
 
 	/* if(gram_duty() == FAILURE) return FAILURE; */
 
@@ -879,7 +895,7 @@ STATUS pulsegen(void)
 	gzcores   = (WF_PULSE *) AllocNode(ncores*sizeof(WF_PULSE));
 	rhocores  = (WF_PULSE *) AllocNode(ncores*sizeof(WF_PULSE));
 	thetacores  = (WF_PULSE *) AllocNode(ncores*sizeof(WF_PULSE));
-	waitcores   = (WF_PULSE *) AllocNode(ncores*sizeof(WF_PULSE));
+	waitcores  = (WF_PULSE *) AllocNode(ncores*sizeof(WF_PULSE));
 
 	coresinfo = (rfstruct *) AllocNode(ncores*sizeof(rfstruct));
 	echocores = (WF_PULSE *) AllocNode(ncores*sizeof(WF_PULSE));
