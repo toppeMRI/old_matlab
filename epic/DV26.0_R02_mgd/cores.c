@@ -136,7 +136,7 @@ int cores_readloop(char *fname, int* looparr) {
 	FILE *fid;
 	int nt, i, j;
 	char line[200];
-	int loophdr[4];
+	int loophdr[5];
 
 	fprintf(stderr,"cores_readloop(): reading %s \n", fname);
 
