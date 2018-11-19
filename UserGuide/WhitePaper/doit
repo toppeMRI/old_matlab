@@ -13,8 +13,3 @@ rm -rf *.log
 
 mv main.pdf TOPPE_WhitePaper.pdf
 
-# acroread main.pdf &
-#xpdf -z 150 main.pdf &
-#xpdf -fullscreen main.pdf &
-evince main.pdf &
-

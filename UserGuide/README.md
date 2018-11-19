@@ -4,8 +4,3 @@ To generate the user guide pdf:
 ```
 ./doit
 ```
-Then
-```
-cp main.pdf TOPPE_UserGuide.pdf
-```
-
