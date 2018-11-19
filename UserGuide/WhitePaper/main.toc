@@ -1,0 +1,10 @@
+\contentsline {chapter}{\numberline {1}Source files}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}{\tt jfn\_rf\_files2.c} and {\tt jfn\_rf\_files2.h}}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3} {\tt cores.c}, {\tt cores.h} }{6}{section.1.3}
+\contentsline {section}{\numberline {1.4} {\tt toppev2.e}}{9}{section.1.4}
+\contentsline {subsection}{\numberline {1.4.1}Loading modules.txt}{9}{subsection.1.4.1}
+\contentsline {subsection}{\numberline {1.4.2}Miscellaneous sequence information}{10}{subsection.1.4.2}
+\contentsline {subsection}{\numberline {1.4.3}Loading waveform shapes}{10}{subsection.1.4.3}
+\contentsline {subsection}{\numberline {1.4.4}Loading scanloop.txt}{10}{subsection.1.4.4}
+\contentsline {subsection}{\numberline {1.4.5}Sequence execution}{11}{subsection.1.4.5}

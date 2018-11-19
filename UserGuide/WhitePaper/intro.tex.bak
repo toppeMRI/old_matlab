@@ -1,0 +1,139 @@
+
+
+\chapter{Overview}
+\setcounter{page}{1}
+
+\section{Introduction}
+Implementing research pulse sequences on GE MR scanners requires EPIC programming, a time-consuming and error-prone task with a steep learning curve.
+Moreover, pulse sequences need to be recompiled after each scanner software upgrade, which is sometimes problematic.
+
+This user guide describes the ``toppe.e'' pulse sequence for GE scanners, which allows the entire sequence to be specified with a set of external files created with a high-level software tool such as Matlab.
+This makes it possible to play arbitrary sequences of RF pulses and gradient waveforms, which enables \textbf{rapid prototyping of sequences without the need for low-level EPIC programming}.
+With \toppe, the task of pulse programming a GE scanner becomes one of creating the various external files that define the sequence.
+
+\myfigure{overview}{0.95}{
+Overview of pulse sequence programming with \toppe.
+The TOPPE sequence files (orange) specify all details of the MR acquisition, such as RF phase cycling, gradient waveforms, and timing information.
+These files are created in MATLAB using the TOPPE MATLAB toolbox (\url{https://github.com/toppeMRI/matlab/}).
+The TOPPE sequence files are passed on to the TOPPE interpreter (green), a binary executable that executes the sequence on the scanner.
+%Source code (EPIC) for the interpreter is available for download on the GE Collaboration Community site at \url{https://collaborate.mr.gehealthcare.com/docs/DOC-1247}.
+The interpreter only needs to be compiled and installed once per scanner software upgrade.
+With this setup, arbitrary sequences of RF and gradient pulses can be played out, which enables rapid pulse sequence prototyping without the need for EPIC programming.
+}
+
+\toppe~was developed as a research tool at the fMRI laboratory at University of Michigan, and has to date been used in several projects including stack-of-spirals imaging, Bloch-Siegert B1+ mapping, echo-shifted RF-spoiled imaging (PRESTO), steady-state imaging with 3D tailored RF excitation, and dual-echo steady-state (DESS) imaging.
+
+We are currently making \toppe~compatible with {\bf Pulseq}, an open file format for compactly describing MR sequences.
+See Chapter~\ref{ch:pulseq} for more information about using \toppe~as a GE ``interpreter module'' for Pulseq files.
+
+\textbf{Your feedback} is most welcome. 
+%Finally, if you are interesting in joining the development team, we'd love to hear from you.
+
+
+\section{Required external files}
+In addition to the {\tt toppe} and {\tt toppe.psd.o} executables, the following files are needed to run a particular scan (see Fig.~\ref{fig:files}):
+
+\subsection{ {\tt $\star$.mod} files}
+\toppe~creates several unique ``cores'' (or modules), with each core/module associated with one .mod file (Fig.~\ref{fig:files}).
+For example, an RF excitation module may be defined by a file called {\tt tipdown.mod} that specifies the RF amplitude and phase waveforms (rho and theta) and all three gradients.
+Similarly, a Cartesian (spin-warp) gradient-echo readout may be defined in a file {\tt readout.mod} that contains readout and phase-encode gradient waveforms.
+Finally, a spoiler gradient can be defined in a file {\tt spoiler.mod}.
+Each .mod file is unique up to waveform scale factors and to a rotation in the logical xy-plane, and typically only a few .mod files are needed.
+Note that each .mod file gives rise to a separate {\tt createseq()} call in \toppe.
+
+\subsection{\tt modules.txt}
+The various $\star$.mod files needed to define a scan are listed in a small text file named {\tt modules.txt}, which simply contains a line for each .mod file specifying the file name, core duration, and whether it is an RF excitation module, readout module, or gradients-only module.
+Values are tab-separated.
+A {\tt modules.txt} file for our simple spin-warp imaging example may look like this:
+\begin{lstlisting}
+Total number of unique cores
+3
+wavfile_name	duration(us)	hasRF?	hasDAQ?
+tipdown.mod	0	1	0
+readout.mod	0	0	1
+spoiler.mod	0	0	0
+\end{lstlisting}
+A duration of 0 means that the minimum core duration for that .mod file will be used.
+
+\subsection{\tt scanloop.txt}
+Finally, the complete MR scan loop is specified in {\tt scanloop.txt}, in which each line corresponds to a separate {\tt startseq()} call in \toppe.
+A {\tt scanloop.txt} file for single-slice, RF-spoiled spin-warp imaging with 256 phase-encodes might begin like this:
+\begin{lstlisting}
+nt	maxslice	maxecho	maxview
+768	1	0	768	
+Core iarf iath iagx iagy iagz slice echo view dabon rot rfph recph textra freq
+1	32766	32766	0	0	32766	0	0	0	0	0	0	0	0	0
+2	0	0	32766	32766	-32638	1	0	1	1	0	0	0	0	0
+3	0	0	0	0	32766	0	0	0	0	0	0	0	0	0
+1	32766	32766	0	0	32766	0	0	0	0	0	21298	0	0	0
+2	0	0	32766	32766	-32382	1	0	2	1	0	0	21298	0	0
+3	0	0	0	0	32766	0	0	0	0	0	0	0	0	0
+...
+\end{lstlisting}
+where nt is the total number of {\tt startseq()} calls (256 phase-encodes $\times$ 3 cores per TR), and \texttt{maxslice}, \texttt{maxecho}, and \texttt{maxview} correspond to \texttt{rhnslices}$-$1, \texttt{rhnecho}$-$1, and \texttt{rhnframes}, respectively, in \toppe.
+\textbf{We do not recommend using the {\tt slice=0} and {\tt view=0} indeces (``slots'')}, hence the {\tt slice} and {\tt view} indeces both start at 1 in the above example.
+Each row in {\tt scanloop.txt} specifies which module to play and with what RF and gradient amplitudes; where to store the data using $\tt loaddab()$ (i.e., which slice/echo/view); whether the module is used to acquire data; in-plane (kx,ky) rotation angle; the RF and acquisition phase; a value 'textra' (in $\mu$s) by which the core duration is extended (see Ch.~\ref{ch:timing}), and the RF/acquisition frequency in Hz.
+Values are tab-separated.
+For long scans, {\tt scanloop.txt} can contain many tens of thousands of lines.
+
+%Figure~\ref{fig:overview} summarizes the ...
+
+
+\myfigure{files}{0.95}
+{
+Overview of the TOPPE file structure.
+A TOPPE MR sequence is comprised of a (usually) small number of unique modules that are listed in the file \texttt{'modules.txt'} (a).
+Each module contains a set of arbitrary gradient waveforms and a complex RF waveform (if applicable), and is contained within a file with extension \texttt{`.mod'}.
+These modules are unique up to waveform scale factors, and to a rotation in the logical transverse (k$_\textrm{xy}$) plane.
+(b) Example of four different modules within an MR sequence: two 3D RF excitations, one spiral-in readout, and one gradient spoiler.
+(c) The file \texttt{'scanloop.txt'} lists the order in which to execute the modules, and specifies all other dynamic sequence information.
+Each row specifies the module number as listed in \texttt{modules.txt}; RF and gradient waveform amplitudes;
+where to store the acquired data in memory ('slice/echo/view' indices).
+in-plane rotation angle ('phi');
+transmit and receive phase;
+a parameter 'textra' by which to extend module duration (for dynamic TR changes);
+and RF transmit frequency (for slice offsets).
+For detailing sequence timing information, see Ch.~\ref{ch:timing}.
+}
+
+
+\section{Source code and other resources}
+
+TOPPE is open-source and is available at the following sites:
+
+\subsection{https://github.com/toppeMRI/matlab}
+
+Matlab scripts for creating and viewing TOPPE files. Also contains complete sequence examples.
+To access the code, you can either browse the website, or copy the entire repository to local disk as follows:
+
+\begin{lstlisting}
+git clone https://github.com/toppemri/matlab
+\end{lstlisting}
+
+
+\subsection{https://collaborate.mr.gehealthcare.com/docs/DOC-1247}
+
+The toppe intepreter (psd) is hosted at \url{https://github.com/toppeMRI/psd}, however this is a private repository and requires invitation as collaborator to access.
+
+However, ``snapshots'' of this repository are posted periodically on the GE collaboration forum: \\
+\url{https://collaborate.mr.gehealthcare.com/docs/DOC-1247}.
+
+
+\subsection{https://github.com/toppeMRI/UserGuide}
+
+Latex source files for this user guide.
+To access, browse the website or copy the entire repository to local disk as follows:
+\begin{lstlisting}
+git clone https://github.com/toppemri/UserGuide
+\end{lstlisting}
+
+
+
+\subsection{https://toppemri.github.io/}
+
+The TOPPE website.
+
+
+
+
+% EOF
