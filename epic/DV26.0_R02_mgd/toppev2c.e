@@ -459,7 +459,8 @@ int predownload()
 	FILE *fpin;
 	rfstruct roinfo;            /* contains contents of readout.mod file */
 	corestruct coredefinfo;  /* contain list of .mod files for array of cores and related info. See cores.h */
-	int loophdr[4];
+	int loophdr[5];
+	int scandur, tmpmin, tmpsec;
 
   /* velocity-encoding local variables */
 /*
@@ -517,7 +518,11 @@ int predownload()
 	maxslice  = loophdr[1];
 	maxecho   = loophdr[2];
 	maxview   = loophdr[3];
+	scandur   = loophdr[4];     /* microseconds (int) */
 	fprintf(stderr, "predownload(): nstartseq = %d, maxslice/maxecho/maxview = %d/%d/%d \n", nstartseq, maxslice, maxecho, maxview);
+	tmpmin = scandur/(60*1000000);               /* C integer division acts as floor */
+	tmpsec = scandur/1000000 - tmpmin*60;  
+	fprintf(stderr, "predownload(): scan duration: %d min %d sec (scandur = %d)\n", tmpmin, tmpsec, scandur);
 
 	/* get total number of unique cores, and fill hasDAQ and hasRF arrays */
 	if (cores_getinfo("modules.txt", &coredefinfo)== JFN_FAILURE) {
@@ -525,6 +530,10 @@ int predownload()
 		return FAILURE;
 	};
 	ncores = coredefinfo.ncores;
+	if (ncores  > MAXCORES ) {
+		epic_error(use_ermes, "number of cores in modules.txt exceeds MAXCORES",0,0);
+		return FAILURE;
+	}
 	for (j=0; j<ncores; j++) {
 		hasRF[j] = coredefinfo.hasRF[j];
 		hasDAQ[j] = coredefinfo.hasDAQ[j];
@@ -560,6 +569,10 @@ int predownload()
 		pitslice = psdseqtime;
 		pitscan = (float)(optr)*(nframes);
 	}
+
+	pidmode = PSD_CLOCK_NORM;
+	pitslice = (float) (scandur/1000000.0/(float)opslquant);   /* don't know if this is needed */        
+	pitscan = (float)(scandur/1000000.0);       /* sec */
 	
 	minte = 4us;
 	cvmin(opte, minte);
