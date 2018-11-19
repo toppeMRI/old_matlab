@@ -571,9 +571,9 @@ int predownload()
 	}
 
 	pidmode = PSD_CLOCK_NORM;
-	pitslice = (float) (scandur/1000000.0/(float)opslquant);   /* don't know if this is needed */        
-	pitscan = (float)(scandur)/1000000.0;       /* sec */
-	fprintf(stderr, "pitscan = %.2f, pitslice = %.2f\n", pitscan, pitslice);
+	/* pitslice = (float) (scandur/1000000.0/(float)opslquant); */   /* don't know if this is needed */        
+	pitscan = scandur;    /* us */         /* (float)(scandur)/1000000.0; */      /* sec */
+	fprintf(stderr, "pitscan = %d\n", pitscan);
 	
 	minte = 4us;
 	cvmin(opte, minte);
