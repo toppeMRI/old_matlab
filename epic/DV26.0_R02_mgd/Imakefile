@@ -35,7 +35,7 @@ MAKE_TARGET = programs
  * The root name of the PSD to be built; eg: 2dfast, fsemaster
 PSD = test1
  */
-PSD = toppev2b
+PSD = toppev2c
 
 
 /*
