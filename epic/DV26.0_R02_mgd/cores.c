@@ -112,7 +112,7 @@ int cores_freemem(corestruct *coredefinfo) {
 int cores_getloophdr(char *fname, int* loophdr) {
 
 	FILE *fid;
-	int nt, i;
+	int nt, i, fpos;
 	char line[200];
 
 	fprintf(stderr,"cores_getloophdr(): reading %s \n", fname);
@@ -121,7 +121,16 @@ int cores_getloophdr(char *fname, int* loophdr) {
 		return(JFN_FAILURE);
 
 	fgets(&line, 200, fid);   /* go past first line */
-	fscanf(fid, "%d\t%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]), &(loophdr[4]));
+
+	fpos = ftell(fid);
+
+	if ( fscanf(fid, "%d\t%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]), &(loophdr[4])) < 5) {
+		/* scan duration 5th column not present, so only read the first 4 */
+		fseek(fid, fpos, SEEK_SET);
+		fscanf(fid, "%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]));
+		fprintf(stderr,"cores_getloophdr(): scan duration not found. Setting scan clock to 0 \n");
+		loophdr[4] = 0;    /* scan clock (us) */
+	}
 	fprintf(stderr, "\tcores_getloophdr: Found %d startseq() calls in loop file\n", loophdr[0]);
 
 	fclose (fid);
@@ -131,12 +140,11 @@ int cores_getloophdr(char *fname, int* loophdr) {
 
 
 /* read .loop file */
-int cores_readloop(char *fname, int* looparr) {
+int cores_readloop(char *fname, int* looparr, int* loophdr) {
 
 	FILE *fid;
 	int nt, i, j;
 	char line[200];
-	int loophdr[5];
 
 	fprintf(stderr,"cores_readloop(): reading %s \n", fname);
 
@@ -144,11 +152,10 @@ int cores_readloop(char *fname, int* looparr) {
 		return(JFN_FAILURE);
 
 	fgets(&line, 200, fid);   /* skip line */
-
-	fscanf(fid, "%d\t%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]), &(loophdr[4])); 
-	nt = loophdr[0];
-
 	fgets(&line, 200, fid);   /* skip line */
+	fgets(&line, 200, fid);   /* skip line */
+
+	nt = loophdr[0];
 
 	/* load loop array */
 	for (i = 0; i < nt; i++)  {
