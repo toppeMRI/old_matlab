@@ -5,6 +5,8 @@
 *.slx -crlf -diff -merge
 *.mdl -crlf -diff -merge
 
+P*.7 -crlf -diff -merge
+
 *.mdlp -crlf -diff -merge
 *.slxp -crlf -diff -merge
 *.sldd -crlf -diff -merge
@@ -16,3 +18,4 @@
 *.pdf -crlf -diff -merge
 *.jpg -crlf -diff -merge
 *.png -crlf -diff -merge
+
