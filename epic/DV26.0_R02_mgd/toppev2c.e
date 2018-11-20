@@ -545,7 +545,7 @@ int predownload()
 	}
 
 	/* fill looparr (needed in scan()) */
-	if ( cores_readloop("scanloop.txt", looparr) == JFN_FAILURE ) {
+	if ( cores_readloop("scanloop.txt", looparr, loophdr) == JFN_FAILURE ) {
 		epic_error(use_ermes, "cores readloop call failed",0,0);
 		return FAILURE;
 	}

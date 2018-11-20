@@ -34,6 +34,6 @@ int cores_getinfo(char *fname, corestruct* coredefinfo);
 
 int cores_getloophdr(char *fname, int* loophdr);
 
-int cores_readloop(char *fname, int* looparr);
+int cores_readloop(char *fname, int* looparr, int* loophdr);
 
 #endif
