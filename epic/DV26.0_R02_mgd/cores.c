@@ -121,7 +121,7 @@ int cores_getloophdr(char *fname, int* loophdr) {
 		return(JFN_FAILURE);
 
 	fgets(&line, 200, fid);   /* go past first line */
-	fscanf(fid, "%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3])); 
+	fscanf(fid, "%d\t%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]), &(loophdr[4]));
 	fprintf(stderr, "\tcores_getloophdr: Found %d startseq() calls in loop file\n", loophdr[0]);
 
 	fclose (fid);
@@ -136,7 +136,7 @@ int cores_readloop(char *fname, int* looparr) {
 	FILE *fid;
 	int nt, i, j;
 	char line[200];
-	int loophdr[4];
+	int loophdr[5];
 
 	fprintf(stderr,"cores_readloop(): reading %s \n", fname);
 
@@ -144,7 +144,8 @@ int cores_readloop(char *fname, int* looparr) {
 		return(JFN_FAILURE);
 
 	fgets(&line, 200, fid);   /* skip line */
-	fscanf(fid, "%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3])); 
+
+	fscanf(fid, "%d\t%d\t%d\t%d\t%d\n", &(loophdr[0]), &(loophdr[1]), &(loophdr[2]), &(loophdr[3]), &(loophdr[4])); 
 	nt = loophdr[0];
 
 	fgets(&line, 200, fid);   /* skip line */
@@ -155,13 +156,6 @@ int cores_readloop(char *fname, int* looparr) {
 			fscanf(fid, "%d\t", &(looparr[i*NL+j]));
 		}
 		fscanf(fid, "%d\n", &(looparr[i*NL+NL-1]));
-/*
-		fprintf(stderr,"cores_readloop(): phi = %d \n", looparr[i*NL+NL-1]);
-		fscanf(fid, "%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-			&(looparr[i*NL+0]), &(looparr[i*NL+1]), &(looparr[i*NL+2]), &(looparr[i*NL+3]), &(looparr[i*NL+4]), 
-			&(looparr[i*NL+5]), &(looparr[i*NL+6]), &(looparr[i*NL+7]), &(looparr[i*NL+8]), &(looparr[i*NL+9]),
-			&(looparr[i*NL+10]));
-*/
 	}
 
 	for (i = nt-20; i < nt; i++)  {
