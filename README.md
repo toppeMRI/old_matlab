@@ -1,5 +1,8 @@
 # TOPPE Matlab toolbox
 
+This repo is a copy of the U of Michigan fMRI lab TOPPE repo
+
+
 ## +toppe
 
 Matlab package (namespace) with basic toppe functions such as writemod.m, plotmod.m, playseq.m.
@@ -17,4 +20,6 @@ Matlab scripts for converting to/from Pulseq file format. WIP.
 ## ./UserGuide/
 
 Latex source code.
+
+
 
