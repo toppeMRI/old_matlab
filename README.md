@@ -1,3 +1,5 @@
+# TOPPE Matlab toolbox
+
 ## +toppe
 
 Matlab package (namespace) with basic toppe functions such as writemod.m, plotmod.m, playseq.m.
@@ -12,8 +14,7 @@ Matlab package (namespace) with basic toppe functions such as writemod.m, plotmo
 
 Matlab scripts for converting to/from Pulseq file format. WIP.
 
-## ./epic/
+## ./UserGuide/
 
-EPIC .e source code
-
+Latex source code.
 
